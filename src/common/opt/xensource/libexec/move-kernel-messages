@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ ! -e /etc/xensource/no_move_kernel_tty ]
+then
+    # Put the kernel messages on tty2
+    /usr/bin/openvt -c 2 /bin/echo "System Messages:"
+    /opt/xensource/libexec/set-printk-console 2
+fi
+
+clear </dev/tty1 >/dev/tty1 || true

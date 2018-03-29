@@ -1,0 +1,11 @@
+[Unit]
+Description=Open-FCoE Initialiser
+After=syslog.target network.target lldpad.service xcp-networkd.service openvswitch.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/sysconfig/fcoe
+ExecStart=/opt/xensource/libexec/fcoe_driver --init
+
+[Install]
+WantedBy=multi-user.target

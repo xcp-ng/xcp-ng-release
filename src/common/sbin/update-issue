@@ -1,0 +1,65 @@
+#!/bin/bash
+set -e
+
+[ -e /run/boottime.stamp ] || touch /run/boottime.stamp
+
+. /etc/xensource-inventory
+
+unset IP
+unset BANNER
+unset HOSTTYPE
+
+if [ ! -z "${PRODUCT_VERSION}" ]; then
+    BANNER="${COMPANY_NAME_SHORT} ${PRODUCT_BRAND} Host ${PRODUCT_VERSION}"
+    HOSTTYPE="${PRODUCT_BRAND} Host"
+    if [ -n "${BRAND_CONSOLE_URL}" ]; then
+        MANAGE="To manage this server please use the ${COMPANY_NAME_SHORT} ${BRAND_CONSOLE} application. 
+You can install ${BRAND_CONSOLE} for Windows from ${BRAND_CONSOLE_URL}."
+    else
+        MANAGE="To manage this server please use the ${COMPANY_NAME_SHORT} ${BRAND_CONSOLE} application. 
+You can install ${BRAND_CONSOLE} for Windows from the ${PRODUCT_BRAND} installation media."
+    fi
+
+else
+    BANNER="Xen.org XCP Host ${PLATFORM_VERSION}"
+    HOSTTYPE="XCP Host"
+    MANAGE="To manage this server please use the xe command line utility."
+fi
+
+
+[ -z "$MANAGEMENT_INTERFACE" ] || {
+   IP=$(ip addr show dev $MANAGEMENT_INTERFACE | awk '/ inet / { print $2 }')
+   IP=${IP%%/*}
+}
+: ${IP:="IP address not configured"}
+
+unset FINGERPRINT
+if [ -f /etc/xensource/xapi-ssl.pem ] ; then
+    FINGERPRINT=`openssl x509 -in /etc/xensource/xapi-ssl.pem -fingerprint -noout`
+    FINGERPRINT=${FINGERPRINT#SHA1 Fingerprint=}
+fi
+cat > $mnt/etc/issue <<EOF
+${BANNER}
+
+System Booted: `date -r /run/boottime.stamp +"%F %R"`
+
+Your ${HOSTTYPE} has now finished booting. 
+${MANAGE}
+
+You can connect to this system using one of the following network
+addresses:
+
+$IP
+
+EOF
+
+if [ -n "${FINGERPRINT}" ] ; then
+    cat >> $mnt/etc/issue <<EOF
+${HOSTTYPE} SSL certificate fingerprint:
+$FINGERPRINT
+
+EOF
+fi
+
+exit 0
+

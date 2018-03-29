@@ -1,0 +1,10 @@
+[Unit]
+Description=Move kernel messages to tty2
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/xensource/libexec/move-kernel-messages
+
+[Install]
+WantedBy=getty.target

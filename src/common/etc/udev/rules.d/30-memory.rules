@@ -1,0 +1,3 @@
+# Automatically online hotplugged memory (required for the balloon
+# driver to hotplug memory).
+SUBSYSTEM=="memory", ACTION=="add", DEVPATH=="/devices/system/memory/memory*[0-9]", TEST=="/sys$devpath/state", RUN+="/bin/sh -c 'echo online > /sys$devpath/state'"

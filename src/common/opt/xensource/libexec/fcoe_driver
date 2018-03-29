@@ -1,0 +1,298 @@
+#!/usr/bin/env python
+#
+# Copyright (c) Citrix Systems 2015. All rights reserved.
+#
+
+"""Usage:
+
+   %fcoe_driver --init
+   %fcoe_driver --xapi <INTERFACE> capable
+
+   where,
+        INTERFACE is pif interface
+"""
+
+import logging
+import os, sys, getopt
+import subprocess
+import fileinput
+import optparse
+import time
+from logging.handlers import SysLogHandler
+
+debug_flag = False
+logger = None
+backend = None
+
+
+def log(str):
+    if debug_flag:
+       logger.debug('xs-fcoe: '+ str)
+
+def log_exception(str):
+    if debug_flag:
+       logger.exception('xs-fcoe: '+ str)
+
+def execute(cmd):
+    try:
+       output = subprocess.check_output(cmd)
+       log('command: %s output:%s' %(cmd,output))
+       return output
+    except (subprocess.CalledProcessError, StandardError) as e:
+       log_exception('Error - %s' % e)
+       return None
+
+def get_all_ifs():
+    ifs = []
+    try:
+        ifs = list(filter(lambda x: x.startswith('eth'), os.listdir('/sys/class/net')))
+    except StandardError, e:
+        log_exception('Error - %s' % e)
+
+    log('Interface list %s' % ifs)
+    return ifs
+
+def get_backend_type():
+    try:
+        filename = "/etc/xensource/network.conf"
+        fd = open(filename)
+        for line in fd.readlines():
+            if not line.startswith("#") and 'bridge' in line:
+                return 'bridge'
+            if not line.startswith("#") and 'openvswitch' in line:
+                return 'openvswitch'
+    except StandardError, e:
+        log_exception('Error - %s' % e)
+        return None
+    finally:
+        if fd is not None:
+            fd.close()
+
+    log('Backend type is unknown')
+    return None
+
+def disable_dcb(intf):
+    log('Disable dcb on %s' % intf)
+    configfile = "/etc/fcoe/cfg-%s" % intf
+    for line in fileinput.input(configfile, inplace=1):
+      if 'DCB_REQUIRED' in line:
+         print 'DCB_REQUIRED="no"'
+      else:
+         print line,
+
+def get_all_ether_interface_of_fcoe_instance():
+    interfaces = []
+    output = execute(['fcoeadm', '-i'])
+    if output is not None:
+        for line in output.split('\n'):
+            line = line.strip()
+            # Find out the ethernet name from output line as following:
+            # Symbolic Name:     bnx2fc (QLogic BCM57840) v2.11.0 over eth1.11
+            if line.startswith('Symbolic Name:'):
+                # get the ethernet interface name exclude the vlanid
+                interfaces.append(line.split(' ')[-1].split('.')[0])
+
+    return interfaces
+
+def fcoe_init():
+
+    fd = None
+    start_fcoe_service = False
+    ifs = get_all_ifs()
+    fipvlan_interfaces = get_all_ether_interface_of_fcoe_instance()
+
+    for intf in ifs:
+      if get_fcoe_capability(intf) and \
+         is_interface_not_blacklisted(intf) and \
+         (not is_interface_bonded(intf)) and \
+         (intf not in fipvlan_interfaces):
+         start_fcoe_service = True
+         execute(['cp', '/etc/fcoe/cfg-ethx', '/etc/fcoe/cfg-' + intf])
+         if hw_lldp_capable(intf):
+             execute(['/usr/sbin/lldptool', '-i', intf, '-L', 'adminStatus=disabled'])
+             disable_dcb(intf)
+         else:
+             log('Applying config on interface: %s' % intf)
+             execute(['dcbtool', 'sc', intf, 'dcb', 'on'])
+             execute(['dcbtool', 'sc', intf, 'app:fcoe', 'e:1'])
+             execute(['dcbtool', 'sc', intf, 'pfc', 'e:1', 'a:1', 'w:1'])
+
+    if start_fcoe_service:
+        try:
+            if backend == 'bridge':
+                execute(['/sbin/ebtables', '-t', 'broute', '-D', 'BROUTING', '-p', '0x8914', '-j', 'DROP'])
+                execute(['/sbin/ebtables', '-t', 'broute', '-A', 'BROUTING', '-p', '0x8914', '-j', 'DROP'])
+            if backend == 'openvswitch':
+                with open('/sys/module/openvswitch/parameters/ignore_fip_lldp', 'w') as f:
+                    f.write("1")
+        except StandardError, e:
+            log_exception('Error - %s' % e)
+            return os.EX_OSFILE
+
+    return os.EX_OK
+
+def hw_lldp_capable(intf):
+    output = execute(['ethtool', '-i', intf])
+    if output is None:
+       return False
+
+    try:
+       outlist = output.split('\n')
+       driver = outlist[0].split(':')[1].strip()
+       version = outlist[1].split(':')[1].strip()
+    except StandardError, e:
+       log('hw lldp capability fetch failed: %s' % output)
+       log_exception('Error - %s' % e)
+       return False
+
+    if driver == "bnx2x":
+       log('%s is lldp capable, turning off lldp' % intf)
+       return True
+    else:
+       return False
+
+def is_interface_bonded(intf):
+    try:
+        if backend == 'bridge':
+            output = execute(['ip', 'link', 'show', intf])
+            if output is None:
+                return False
+
+            if output.find('SLAVE') != -1:
+                log('%s is a bonded slave' % intf)
+                return True
+
+        if backend == 'openvswitch':
+            output = execute(['ovs-appctl', 'bond/list'])
+            if output is None:
+                return False
+
+            bondlist = output.split('\n')[1:]
+            for line in bondlist:
+                ifs = [ s.strip(',') for s in line.split()[3:] ]
+                if intf in ifs:
+                    log('%s is a bonded slave' % intf)
+                    return True
+
+    except StandardError, e:
+       log('bonding status fetch failed: %s' % output)
+       log_exception('Error - %s' % e)
+
+    return False
+
+def is_interface_not_blacklisted(intf):
+
+    fd = None
+    try:
+        filename = "/etc/sysconfig/fcoe-blacklist"
+        fd = open(filename)
+
+        output = execute(['ethtool', '-i', intf])
+        if output is None:
+           return True
+        outlist = output.split('\n')
+        driver = outlist[0].split(':')[1].strip()
+        version = outlist[1].split(':')[1].strip()
+
+        for line in fd.readlines():
+           if driver in line and version in line:
+                log('%s is blacklisted' % intf)
+                return False
+    except StandardError, e:
+        log_exception('Error - %s' % e)
+        return True
+    finally:
+       if fd is not None:
+          fd.close()
+
+    return True
+
+def get_fcoe_capability(intf):
+
+    output = None
+    try:
+       output = execute(['dcbtool', 'gc', intf, 'dcb'])
+       if output is not None:
+          outlist = output.split('\n')
+          outstr = outlist[3]
+          outdata = outstr.split(':')
+          if "Successful" in outdata[1]:
+             log('%s is FCoE capable' % intf)
+             return True
+          else:
+             log('%s is not FCoE capable' % intf)
+             return False
+       log('%s is not FCoE capable' % intf)
+       return False
+    except StandardError, e:
+       log('FCoE capability fetch failed: %s' % output)
+       log_exception('Error - %s' % e)
+       return False
+
+def main():
+
+   try:
+      parser = optparse.OptionParser(usage="usage: %prog [options]")
+
+      parser.add_option('-s', '--syslog',
+                 action="store_true",
+                 dest='syslog_enable',
+                 default=False,
+                 help="Enable debug logs")
+
+      parser.add_option('-x', '--xapi',
+                 action="store_true",
+                 dest='xapi_call',
+                 default=False,
+                 help="api to XAPI for interface FCoE capability")
+
+      parser.add_option("-i", "--init",
+                 action="store_const", const="init", dest="action",
+                 help="Initialize FCoE daemon")
+
+      options, args = parser.parse_args()
+
+      #Enable syslog debugging
+      if options.syslog_enable:
+         global debug_flag
+         global logger
+         debug_flag = True
+         logger = logging.getLogger()
+         logger.setLevel(logging.DEBUG)
+         handler = logging.handlers.SysLogHandler(address='/dev/log', facility=SysLogHandler.LOG_DAEMON)
+         logger.addHandler(handler)
+   except StandardError, e:
+      log_exception('Error - %s' % e)
+      return os.EX_SOFTWARE
+
+   global backend
+   backend = get_backend_type()
+   if backend is None:
+      return os.EX_SOFTWARE
+
+   # command: fcoe_driver --init
+   if options.action == "init":
+      log('fcoe_driver init called')
+      return fcoe_init()
+
+   # command: fcoe_driver --xapi ethX capable
+   elif options.xapi_call:
+      if get_fcoe_capability(args[0]) and \
+         is_interface_not_blacklisted(args[0]) and \
+         not is_interface_bonded(args[0]):
+
+         print "True"
+      else:
+         print "False"
+
+   else:
+     parser.print_help()
+
+if __name__ == "__main__":
+   rc = os.EX_OK
+   try:
+      rc = main()
+   except StandardError, e:
+      log_exception('Error - %s' % e)
+      rc = os.EX_SOFTWARE
+   sys.exit(rc)
