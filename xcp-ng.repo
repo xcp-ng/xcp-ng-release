@@ -1,0 +1,5 @@
+[xcp-ng]
+name=XCP-ng 7.4
+baseurl=https://updates.xcp-ng.org/7.4/
+enabled=1
+gpgcheck=0
