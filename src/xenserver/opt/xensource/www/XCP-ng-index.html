@@ -157,9 +157,17 @@ p {
 <p>The links below can be used to download and install @BRAND_CONSOLE@, the graphical, Windows-based user interface for @PRODUCT_BRAND@, from this host.</p>
 
 <ul>
-  <li><a href="XenCenter.iso">@BRAND_CONSOLE@ CD image</a></li>
-  <li><a href="XenCenter.msi">@BRAND_CONSOLE@ installer</a></li>
+  <li><a href="XCP_ng_Center_Installer.msi">@BRAND_CONSOLE@ installer</a></li>
 </ul>
+
+<h2>Xen Orchestra Web console</h2>
+
+<p>You can deploy quickly a Xen Orchestra virtual Appliance on top of your XCP-ng install with this command to run into your host console:
+
+	<pre>bash -c "$(curl -s http://xoa.io/deploy)"</pre>
+
+Note: you need to provide a new/free IP to be able to reach the virtual appliance. Do NOT use the XCP-ng IP address.
+</p>
 
 <!-- InstanceEndEditable -->
 </body>
