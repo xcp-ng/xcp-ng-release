@@ -18,6 +18,8 @@ import subprocess
 import fileinput
 import optparse
 import time
+import re
+import glob
 from logging.handlers import SysLogHandler
 
 debug_flag = False
@@ -229,6 +231,69 @@ def get_fcoe_capability(intf):
        log_exception('Error - %s' % e)
        return False
 
+def get_fcoe_vlans(interface):
+    ''' This routine return fcoe vlans associated with an interface.
+        returns the vlans as a list.
+    '''
+    vlans = []
+    out = execute(['fcoeadm', '-f'])
+    if out is None:
+        return vlans
+
+    for l in out.split('\n'):
+        line = l.strip()
+        if line.startswith('Interface:'):
+            value = line.split(':', 1)[1].strip()
+            iface = value.split('.', 1)[0].strip()
+            if iface == interface:
+                vlans.append(value)
+    return vlans
+
+def get_fcoe_luns(intf):
+    luns = []
+    out = execute(['fcoeadm', '-l', intf])
+    if out is None:
+        return luns
+
+    state = 'header'
+    header_re = re.compile(r'LUN #\d+ Information:')
+    for line in out.split('\n'):
+        line = line.strip()
+        if state == 'header':
+            if header_re.match(line):
+                state = 'search_lun'
+        else:
+            if line.startswith('OS Device Name:'):
+                luns.append(line.split(':')[1].strip())
+                state = 'header'
+
+    return luns
+
+def get_luns_on_intf(interface):
+    ''' this routine get all the luns/block devices
+        available through interface and returns them
+        as a list.
+    '''
+    vlan_intfs = get_fcoe_vlans(interface)
+    luns = []
+
+    for intf in vlan_intfs:
+        luns += get_fcoe_luns(intf)
+
+    return luns
+
+def get_scsi_ids_of_luns(luns):
+    scsi_ids = set()
+    for f in glob.glob('/dev/disk/by-scsibus/*-*'):
+        # `f` looks like '/dev/disk/by-scsibus/3600a098038303973743f486833396d68-1:0:0:0'
+        # It's a link file to a device
+        if not os.path.islink(f):
+            continue
+        if os.path.realpath(f) in luns:
+            scsi_ids.add(os.path.basename(f).split('-')[0])
+
+    return scsi_ids
+
 def main():
 
    try:
@@ -249,6 +314,10 @@ def main():
       parser.add_option("-i", "--init",
                  action="store_const", const="init", dest="action",
                  help="Initialize FCoE daemon")
+
+      parser.add_option('-t', '--interface',
+                 dest='interface', action='store', type='string',
+                 help='Get lun SCSI ids of this interface')
 
       options, args = parser.parse_args()
 
@@ -284,7 +353,10 @@ def main():
          print "True"
       else:
          print "False"
-
+   elif options.interface is not None:
+       luns = get_luns_on_intf(options.interface)
+       scsi_ids = get_scsi_ids_of_luns(luns)
+       print ' '.join(scsi_ids)
    else:
      parser.print_help()
 
