@@ -43,6 +43,7 @@ disable lvm2-lvmpolld.*
 disable dm-event.*
 disable dmraid-activation.service
 enable snapwatchd.service
+enable qemuback.service
 enable tapback.service
 enable cpumond.service
 
