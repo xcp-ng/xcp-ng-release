@@ -1,5 +1,29 @@
-[xcp-ng]
-name=XCP-ng 7.x
-baseurl=https://updates.xcp-ng.org/7.x/
+[xcp-ng-main]
+name=XCP-ng 7 Main Repository
+baseurl=https://updates.xcp-ng.org/7/latest/main/x86_64/
 enabled=1
+gpgcheck=0
+
+[xcp-ng-updates]
+name=XCP-ng 7 Updates Repository
+baseurl=https://updates.xcp-ng.org/7/latest/updates/x86_64/
+enabled=1
+gpgcheck=0
+
+[xcp-ng-extras]
+name=XCP-ng 7 Extras Repository
+baseurl=https://updates.xcp-ng.org/7/latest/extras/x86_64/
+enabled=0
+gpgcheck=0
+
+[xcp-ng-updates_testing]
+name=XCP-ng 7 Updates Testing Repository
+baseurl=https://updates.xcp-ng.org/7/latest/updates_testing/x86_64/
+enabled=0
+gpgcheck=0
+
+[xcp-ng-extras_testing]
+name=XCP-ng 7 Extras Testing Repository
+baseurl=https://updates.xcp-ng.org/7/latest/extras_testing/x86_64/
+enabled=0
 gpgcheck=0
