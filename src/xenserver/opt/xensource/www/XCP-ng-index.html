@@ -3,181 +3,282 @@
 <!-- InstanceBegin template="/Templates/lcm_check_template.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<script src="asset/jquery-3.3.1.min.js"></script>
+<script src="asset/jquery.modal.min.js"></script>
+<script>
+function copyToClipboard(element) {
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).text()).select();
+  document.execCommand("copy");
+  $temp.remove();
+}
+</script>
+<link rel="stylesheet" href="asset/jquery.modal.min.css" />
+<link rel="stylesheet" href="asset/fontawesome-free-5.3.1-web/css/all.css">
 <style type="text/css">
-body {
-	background-color: White;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 80%;
-	line-height: 120%;
-	text-align: justify;
-}
-blockquote {
-	margin-top: -2pt;
-	margin-bottom: 15px;
+/*-------------
+ 	General
+-------------*/
+
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
-h1, h2, h3, h4 {
-	color: #0079BD;  /*Citrix Ocean */
-	font-weight: bold;
-}
-h1 {
-	font-size: 200%;
-	color: #0079BD;  /*Citrix Ocean */
-	font-weight: bold;
-	margin-top: 20pt;
-	margin-bottom: 12pt;
-	padding-bottom: 3px;
-	border-bottom: #666 1px solid;
-}
-h2 {
-	font-size: 160%;
-	color: #0079BD;  /*Citrix Ocean */
-	font-weight: bold;
-	margin-top: 12pt;
-	margin-bottom: 12pt;
-	padding-bottom: 3px;
-	border-bottom: #666 1px solid;
-}
-h3 {
-	font-size: 124%;
-	color: #0079BD;  /*Citrix Ocean */
-	font-weight: bold;
-	margin-top: 15pt;
-	margin-bottom: -5pt;
+html{
+	font: normal 16px sans-serif;
+	color: #555;
 }
 
-h4 {
-	font-size: 100%;
-	font-weight: bold;
-	margin-top: 12pt;
-	margin-bottom: -3pt;
+ul, nav{
+	list-style: none;
 }
 
-h5 {
-	font-size: 80%;
-	color: #0079BD;  /*Citrix Ocean */
-	margin-top: 24pt;
-	border-top: #666 1px solid;
-	padding-top: 8px;
+a{
+	color: inherit;
+	cursor: pointer;
+
+	opacity: 0.9;
 }
 
-
-
-/* =============================================================================================== */
-/* Tags for formatting tables                                                                                      */
-/* =============================================================================================== */
-
-	table {
-	margin-top: 6pt;
-	margin-bottom: 6pt;
-	border-collapse: collapse;
+a:hover{
+	opacity: 1;
 }
 
-	th			{
-	font: bold 10pt Arial, sans-serif;
-	margin-top: 6pt;
-	margin-bottom: 6pt;
-	text-align: left;
-	padding: 4pt;
-	border-bottom: thin solid Silver; }
-
-	tr	{
-		vertical-align: top; }
-
-	td			{
-		font: 10pt Arial, Helvetica, sans-serif;
-		vertical-align: top;
-		padding: 4pt 2pt 4pt 2pt;
-		border-bottom: 0.5pt solid Silver;
-
-		}
-
-	/* Style for use in table with no row or column borders, can be used in <table> and <td> tags */
-	.noborders { border-style: none; }
-	.withborders {
-	border-bottom: 0.5pt solid Silver;
-	border-top: 0.5pt solid Silver;
-	border-left: 0.5pt solid Silver;
-	border-right: 0.5pt solid Silver;
-}
-
-	.centered {
+a.btn{
+	text-decoration: none;
+	color: #fff;
+	border-radius: 4px;
+	text-transform: uppercase;
+	background-color: #cc584c; /* xcp-ng red */
+	font-weight: 800;
 	text-align: center;
 }
 
-	.rowA {
-	background-color: #f0f8ff;
+button{
+  background-color: #cc584c; /* xcp-ng red */
+  border: none;
+  color: white;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+	}
+
+button:hover {background-color: #e09a93}
+
+button:active {
+  background-color: #e09a93;
+  box-shadow: 0 1px #666;
+  transform: translateY(2px);
 }
 
-	/* Style used to give bold font on a table cell, used widely for property descriptions */
-	.cell-bold {
-		padding-right: 8pt;
-		font-weight: bold;	}
+hr{
+	width: 150px;
+	height: 2px;
+	background-color: #cc584c; /* xcp-ng red */
+	border: 0;
+	margin-bottom: 40px;
+}
 
-	.table {
-		margin-top: -5pt;
-		margin-bottom: 0pt; }
+section{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 
-ol {
-	margin-top: 12px;
+	padding: 100px 100px;
 }
-ul {
-	margin-top: 6px;
-	margin-bottom: 6px;
-	list-style-type: disc;
-	text-align: justify;
+
+@media (max-width: 1000px){
+
+	section{
+		padding: 100px 50px;
+	}
+
 }
-li {
-	margin-top: 6px;
-	margin-bottom: 6px;
-	line-height: 120%;
-	text-align: justify;
+
+@media (max-width: 600px){
+
+	section{
+		padding: 80px 30px;
+	}
+
 }
-p {
-	margin-top: 10px;
-	margin-bottom: 10px;
-	line-height: 120%;
-	text-align: left;
+
+section h3.title{
+	color: #414a4f;
+	text-transform: capitalize;
+	font: bold 32px 'Open Sans', sans-serif;
+	margin-bottom: 35px;
+	text-align: center;
 }
+
+section p{
+	max-width: 800px;
+	text-align: center;
+	margin-bottom: 35px;
+	padding: 0 20px;
+	line-height: 2;
+}
+
+ul.grid{
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+/* cyrillic */
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Oswald Regular'), local('Oswald-Regular'), url(https://fonts.gstatic.com/s/oswald/v16/TK3iWkUHHAIjg752HT8Ghe4.woff2) format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Oswald Regular'), local('Oswald-Regular'), url(https://fonts.gstatic.com/s/oswald/v16/TK3iWkUHHAIjg752Fj8Ghe4.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Oswald Regular'), local('Oswald-Regular'), url(https://fonts.gstatic.com/s/oswald/v16/TK3iWkUHHAIjg752Fz8Ghe4.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Oswald Regular'), local('Oswald-Regular'), url(https://fonts.gstatic.com/s/oswald/v16/TK3iWkUHHAIjg752GT8G.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+/*----------------------
+ 	Features Section
+----------------------*/
+
+.features{
+	background-color: #f7f7f7;
+}
+
+.features .grid li{
+	padding: 0 30px;
+	flex-basis: 33%;
+	text-align: center;
+}
+
+.features .grid li i{
+    font-size: 50px;
+    color: #cc584c; /* xcp-ng red */
+    margin-bottom: 25px;
+}
+
+.features .grid li h4{
+	color: #555;
+    font-size: 20px;
+    margin-bottom: 25px;
+}
+
+.features .grid li p{
+    margin: 0;
+}
+
+.features a.btn{
+	padding: 15px 40px;
+}
+
+.features p.management {
+  min-height: 200px;
+}
+
+@media (max-width: 1030px){
+
+	.features .grid li{
+		flex-basis: 70%;
+		margin-bottom: 65px;
+	}
+
+	.features .grid li:last-child{
+		margin-bottom: 0;
+	}
+
+}
+
+
+@media (max-width: 600px){
+
+	.features .grid li{
+		flex-basis: 100%;
+	}
+
+}
+
 </style>
-
-<!-- InstanceBeginEditable name="doctitle" -->
-  <title>Welcome to @COMPANY_NAME_SHORT@ @PRODUCT_BRAND@ @PRODUCT_VERSION@</title>
-<!-- InstanceEndEditable -->
 </head>
 <body>
-<!-- InstanceBeginEditable name="EditRegion1" -->
-  <h1>Welcome to @COMPANY_NAME_SHORT@ @PRODUCT_BRAND@ &#174; @PRODUCT_VERSION@</h1>
-  <p>Thank you for using @COMPANY_NAME_SHORT@ @PRODUCT_BRAND@. This page contains information about the @PRODUCT_BRAND@ @PRODUCT_VERSION@ release.</p>
-<br />
+<section class="features">
+	<h3 class="title">Manage your XCP-ng ® @PRODUCT_VERSION@</h3>
+	<p>You have various options to manage your XCP-ng - choose the one that fits best!</p>
+	<a href="https://github.com/xcp-ng/xcp/wiki" class="btn">Documentation</a>
+  <br style='margin-top:20px'>
+  <a href="https://xcp-ng.org/news/" class="btn" style='background-color:#263740'>Latest news</a>
+	<hr style='margin-top:20px'>
+	<ul class="grid">
+		<li>
+			<i class="fab fa-windows"></i>
+			<h4>XCP-ng Center</h4>
+			<p class="management">XCP-ng Center is a graphical Windows-based user interface for XCP-ng. Download it by using the button below.</p>
+			<a href="XCP-ng-Center.msi" class="btn">Download</a>
+		</li>
+		<li>
+			<i class="fab fa-chrome"></i>
+			<h4>Xen Orchestra Virtual Appliance</h4>
+			<p class="management"><a href="https://xen-orchestra.com/#!/xo-home">Xen Orchestra</a> is a virtual appliance covering all the administration, management, backup and cloud features you may need in your infrastructure.</p>
+			<a href="#ex1" class ="btn" rel="modal:open">Quick deploy</a>
+		</li>
+		<li>
+			<i class="fab fa-osi"></i>
+			<h4>Xen Orchestra Community Edition</h4>
+			<p class="management">You can build XO yourself to unlock all the features. There is no automatic updater in this version. Recommended for homelab - no pro support.</p>
+			<a href="https://xen-orchestra.com/docs/from_the_sources.html" target="_blank" class="btn">Documentation</a>
+		</li>
+	</div>
+</section>
 
-<h2>@BRAND_CONSOLE@</h2>
+<section class="features">
+	<h3 class="title">Pro Support</h3>
+	<br>
+	<a href="https://xcp-ng.com/"><img src="./asset/xcp-ng-pro.jpg"/></a>
+	<p>XCP-ng is a high performance enterprise level hypervisor, responding to the most demanding company activities from SMBs to Datacenters. We have your back when it comes to pro support. Visit our dedicated website to learn more.</p>
+	<hr>
+	<a href="https://xcp-ng.com/" class="btn">Go Pro</a>
 
-<p>@BRAND_CONSOLE@ is a graphical Windows-based user interface for @PRODUCT_BRAND@. Click the link below to download and install @BRAND_CONSOLE@ from this host.</p>
-
-<ul>
-  <li><a href="XCP-ng-Center.msi">@BRAND_CONSOLE@ installer</a></li>
-</ul>
-
-<h2>Xen Orchestra Web console</h2>
-
-<p>You can quickly deploy a <a href="https://xen-orchestra.com">Xen Orchestra</a> virtual Appliance on top of your XCP-ng install with this command to run into your host console:
-
-	<pre>bash -c "$(curl -s http://xoa.io/deploy)"</pre>
-
-Note: you need to provide a new/free IP to be able to reach the virtual appliance. Do NOT use the XCP-ng IP address. Please read the <a href="https://xen-orchestra.com/docs">official documentation</a> for more information.
-</p>
-
-<h2>Community support</h2>
-
-Please visit our community website at <a href="https://xcp-ng.org">xcp-ng.org</a> and <a href="https://xcp-ng.org/forum">find help on the forum</a>.
-
-<h2>Pro support</h2>
-
-Want to run XCP-ng in production? We got your back! Take a look at the <a href="https://xcp-ng.com">XCP-ng Pro services</a> website.
-
-<!-- InstanceEndEditable -->
+<section class="contact">
+	<h3 class="title">Join our community</h3>
+	<p>Thousands of people are using XCP-ng, hundreds are contributing on our community forum. Become a part of our community!</p>
+	<hr>
+		<a href="https://xcp-ng.org/forum" class="btn">Community forum</a>
+</section>
+<!-- Modalcontent -->
+<div id="ex1" class="modal">
+  <p>SSH to your XCP-ng machine and execute the following:</p>
+    <code id="p1" style="color: #808080; background-color:#d9d9d9")> bash -c "$(curl -s http://xoa.io/deploy)"</code>
+        <button class="btn" onclick="copyToClipboard('#p1')"><i class="fas fa-paste"></i></button>
+  <p style="font-style: italic">This will automatically download/import/start the XOA appliance.</p>
+  <br>
+  <a href="#" rel="modal:close">Close</a>
+</div>
 </body>
-<!-- InstanceEnd -->
 </html>
