@@ -1,0 +1,4 @@
+# gpg --quiet --with-fingerprint /etc/pki/rpm-gpg/RPM-GPG-KEY-xcpng
+pub  2048R/3FD3AC9E 2018-10-03 XCP-ng Key (XCP-ng Official Signing Key) <security@xcp-ng.org>
+      Key fingerprint = 34AC 2EB6 8248 FED6 D076  838A CD75 783A 3FD3 AC9E
+sub  2048R/2EB0DF19 2018-10-03
