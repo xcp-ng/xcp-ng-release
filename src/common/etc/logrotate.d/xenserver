@@ -1,4 +1,3 @@
-/var/log/boot.log
 /var/log/crit.log
 /var/log/daemon.log
 /var/log/kern.log

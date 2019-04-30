@@ -12,7 +12,7 @@
 
 [base]
 name=CentOS-$releasever - Base
-baseurl=https://repo.citrite.net/xs-local-yum-centos-transformer/7.2.1511.20160408/os/x86_64/
+baseurl=https://repo.citrite.net/xs-local-yum-centos-transformer/7.5.1804.20181015/os/x86_64/
 #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os&infra=$infra
 #baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
 exclude=kernel kernel-abi-whitelists kernel-debug kernel-debug-devel kernel-devel kernel-doc kernel-tools kernel-tools-libs kernel-tools-libs-devel linux-firmware biosdevname centos-release systemd* stunnel kexec-tools ocaml*
@@ -22,7 +22,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 #released updates 
 [updates]
 name=CentOS-$releasever - Updates
-baseurl=https://repo.citrite.net/xs-local-yum-centos-transformer/7.2.1511.20160408/updates/x86_64/
+baseurl=https://repo.citrite.net/xs-local-yum-centos-transformer/7.5.1804.20181015/updates/x86_64/
 #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=updates&infra=$infra
 #baseurl=http://mirror.centos.org/centos/$releasever/updates/$basearch/
 exclude=kernel kernel-abi-whitelists kernel-debug kernel-debug-devel kernel-devel kernel-doc kernel-tools kernel-tools-libs kernel-tools-libs-devel linux-firmware biosdevname centos-release systemd* stunnel kexec-tools ocaml*
@@ -32,7 +32,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 #additional packages that may be useful
 [extras]
 name=CentOS-$releasever - Extras
-baseurl=https://repo.citrite.net/xs-local-yum-centos-transformer/7.2.1511.20160408/extras/x86_64/
+baseurl=https://repo.citrite.net/xs-local-yum-centos-transformer/7.5.1804.20181015/extras/x86_64/
 #mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=extras&infra=$infra
 #baseurl=http://mirror.centos.org/centos/$releasever/extras/$basearch/
 exclude=ocaml*

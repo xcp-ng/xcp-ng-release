@@ -10,7 +10,7 @@ unset BANNER
 unset HOSTTYPE
 
 if [ ! -z "${PRODUCT_VERSION}" ]; then
-    BANNER="${COMPANY_NAME_SHORT} ${PRODUCT_BRAND} Host ${PRODUCT_VERSION}"
+    BANNER="${COMPANY_PRODUCT_BRAND} Host ${PRODUCT_VERSION}"
     HOSTTYPE="${PRODUCT_BRAND} Host"
     if [ -n "${BRAND_CONSOLE_URL}" ]; then
         MANAGE="To manage this server please use the ${COMPANY_NAME_SHORT} ${BRAND_CONSOLE} application. 

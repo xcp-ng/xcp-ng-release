@@ -46,6 +46,7 @@ enable snapwatchd.service
 enable qemuback.service
 enable tapback.service
 enable cpumond.service
+enable usb-scan.socket
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=855372
 disable mdmonitor.service
@@ -153,3 +154,4 @@ enable xcp-rrdd-iostat.service
 enable xcp-rrdd-squeezed.service
 enable xcp-rrdd-xenpm.service
 enable xapi-nbd.path
+enable varstored-guard.service

@@ -1,0 +1,20 @@
+[Unit]
+Description=System Logging Service
+DefaultDependencies=no
+Requires=sysinit.target systemd-journald.service
+After=sysinit.target systemd-journald.service
+Before=basic.target shutdown.target
+Documentation=man:rsyslogd(8)
+Documentation=http://www.rsyslog.com/doc/
+
+[Service]
+Type=notify
+EnvironmentFile=-/etc/sysconfig/rsyslog
+ExecStart=/usr/sbin/rsyslogd -n $SYSLOGD_OPTIONS
+Restart=on-failure
+UMask=0066
+StandardOutput=null
+
+[Install]
+WantedBy=multi-user.target
+;Alias=syslog.service
