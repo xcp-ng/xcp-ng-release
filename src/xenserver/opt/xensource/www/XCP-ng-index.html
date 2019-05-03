@@ -89,7 +89,7 @@ section{
 	flex-direction: column;
 	align-items: center;
 
-	padding: 100px 100px;
+	padding: 50px 50px;
 }
 
 @media (max-width: 1000px){
@@ -108,10 +108,18 @@ section{
 
 }
 
-section h3.title{
+section h2.title{
 	color: #414a4f;
 	text-transform: capitalize;
 	font: bold 32px 'Open Sans', sans-serif;
+	margin-bottom: 35px;
+	text-align: center;
+}
+
+section h3.subtitle{
+	color: #414a4f;
+	text-transform: capitalize;
+	font: bold 24px 'Open Sans', sans-serif;
 	margin-bottom: 35px;
 	text-align: center;
 }
@@ -175,20 +183,20 @@ ul.grid{
 
 .features .grid li{
 	padding: 0 30px;
-	flex-basis: 33%;
+	flex-basis: 50%;
 	text-align: center;
 }
 
 .features .grid li i{
     font-size: 50px;
     color: #cc584c; /* xcp-ng red */
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
 .features .grid li h4{
 	color: #555;
     font-size: 20px;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
 .features .grid li p{
@@ -228,37 +236,34 @@ ul.grid{
 </style>
 </head>
 <body>
+
 <section class="features">
-	<h3 class="title">Manage your XCP-ng @PRODUCT_VERSION@</h3>
-	<p>You have various options to manage your XCP-ng - choose the one that fits best!</p>
+	<h2 class="title">Welcome on XCP-ng 7.6.0</h2>
 	<a href="https://github.com/xcp-ng/xcp/wiki" class="btn">Documentation</a>
   <br style='margin-top:20px'>
   <a href="https://xcp-ng.org/news/" class="btn" style='background-color:#263740'>Latest news</a>
 	<hr style='margin-top:20px'>
+	<h3 class="subtitle">Management tools</h3>
+	<p>You have various options to manage your XCP-ng - choose the one that fits best!</p>
+
 	<ul class="grid">
 		<li>
-			<i class="fab fa-windows"></i>
-			<h4>XCP-ng Center</h4>
-			<p class="management">XCP-ng Center is a graphical Windows-based user interface for XCP-ng. Download it by using the button below.</p>
-			<a href="XCP-ng-Center.msi" class="btn">Download</a>
-		</li>
-		<li>
 			<i class="fab fa-chrome"></i>
-			<h4>Xen Orchestra Virtual Appliance</h4>
-			<p class="management"><a href="https://xen-orchestra.com/#!/xo-home">Xen Orchestra</a> is a virtual appliance covering all the administration, management, backup and cloud features you may need in your infrastructure.</p>
+			<h4>Xen Orchestra (Web UI)</h4>
+			<p class="management"><a href="https://xen-orchestra.com/#!/xo-home">Xen Orchestra</a> comes in a virtual appliance covering all the administration, management, backup and cloud features you may need in your infrastructure.</br><i class="fab fa-github"></i></p>
 			<a href="#ex1" class ="btn" rel="modal:open">Quick deploy</a>
 		</li>
 		<li>
-			<i class="fab fa-osi"></i>
-			<h4>Xen Orchestra Community Edition</h4>
-			<p class="management">You can build XO yourself to unlock all the features. There is no automatic updater in this version. Recommended for homelab - no pro support.</p>
-			<a href="https://xen-orchestra.com/docs/from_the_sources.html" target="_blank" class="btn">Documentation</a>
+			<i class="fab fa-windows"></i>
+			<h4>XCP-ng Center (Windows Client)</h4>
+			<p class="management">XCP-ng Center is a graphical Windows-based user interface for XCP-ng. Download it by using the button below.</p>
+			<a href="https://github.com/xcp-ng/xenadmin/releases/latest" class="btn">Download</a>
 		</li>
 	</div>
 </section>
 
 <section class="features">
-	<h3 class="title">Pro Support</h3>
+	<h2 class="title">Pro Support</h2>
 	<br>
 	<a href="https://xcp-ng.com/"><img src="./asset/xcp-ng-pro.jpg"/></a>
 	<p>XCP-ng is a high performance enterprise level hypervisor, responding to the most demanding company activities from SMBs to Datacenters. We have your back when it comes to pro support. Visit our dedicated website to learn more.</p>
@@ -266,7 +271,7 @@ ul.grid{
 	<a href="https://xcp-ng.com/" class="btn">Go Pro</a>
 
 <section class="contact">
-	<h3 class="title">Join our community</h3>
+	<h2 class="title">Join our community</h2>
 	<p>Thousands of people are using XCP-ng, hundreds are contributing on our community forum. Become a part of our community!</p>
 	<hr>
 		<a href="https://xcp-ng.org/forum" class="btn">Community forum</a>
