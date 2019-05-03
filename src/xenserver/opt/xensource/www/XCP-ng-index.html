@@ -1,284 +1,581 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<!-- InstanceBegin template="/Templates/lcm_check_template.dwt" codeOutsideHTMLIsLocked="false" -->
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script src="asset/jquery-3.3.1.min.js"></script>
-<script src="asset/jquery.modal.min.js"></script>
-<script>
-function copyToClipboard(element) {
-  var $temp = $("<input>");
-  $("body").append($temp);
-  $temp.val($(element).text()).select();
-  document.execCommand("copy");
-  $temp.remove();
-}
-</script>
-<link rel="stylesheet" href="asset/jquery.modal.min.css" />
-<link rel="stylesheet" href="asset/fontawesome-free-5.3.1-web/css/all.css">
-<style type="text/css">
-/*-------------
- 	General
+  <!--
+    InstanceBegin template="/Templates/lcm_check_template.dwt" codeOutsideHTMLIsLocked="false"
+  -->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="asset/jquery-3.3.1.min.js"></script>
+    <script src="asset/jquery.modal.min.js"></script>
+    <script src="asset/deploy.js"></script>
+    <script>
+      function copyToClipboard(element) {
+        var $temp = $('<input>')
+        $('body').append($temp)
+        $temp.val($(element).text()).select()
+        document.execCommand('copy')
+        $temp.remove()
+      }
+    </script>
+    <link rel="stylesheet" href="asset/jquery.modal.min.css" />
+    <link rel="stylesheet" href="asset/flexboxgrid.min.css" type="text/css" />
+    <link rel="stylesheet" href="asset/fontawesome-pro-5.8.1-web/css/all.css" />
+    <link rel="icon" type="image/png" href="asset/favicon.png" />
+    <style type="text/css">
+      /*-------------
+  General
 -------------*/
 
-*{
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
+      html {
+        font: normal 16px sans-serif;
+        color: #555;
+        background-color: #f7f7f7;
+      }
 
-html{
-	font: normal 16px sans-serif;
-	color: #555;
-}
+      .wrap {
+        max-width: 1280px;
+      }
 
-ul, nav{
-	list-style: none;
-}
+      .row {
+        text-align: center;
+        margin: 0 auto;
+      }
 
-a{
-	color: inherit;
-	cursor: pointer;
+      p {
+        text-align: center;
+        padding: 0.5em 1em;
+        margin: 0;
+      }
 
-	opacity: 0.9;
-}
+      a {
+        color: inherit;
+        cursor: pointer;
+        opacity: 0.9;
+      }
 
-a:hover{
-	opacity: 1;
-}
+      a:hover {
+        opacity: 1;
+      }
 
-a.btn{
-	text-decoration: none;
-	color: #fff;
-	border-radius: 4px;
-	text-transform: uppercase;
-	background-color: #cc584c; /* xcp-ng red */
-	font-weight: 800;
-	text-align: center;
-}
+      a.btn {
+        text-decoration: none;
+        color: #fff;
+        border-radius: 4px;
+        text-transform: uppercase;
+        background-color: #cc584c; /* xcp-ng red */
+        font-weight: 800;
+        text-align: center;
+        padding: 15px 32px;
+        white-space: nowrap;
+      }
 
-button{
-  background-color: #cc584c; /* xcp-ng red */
-  border: none;
-  color: white;
-  padding: 5px 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-	}
+      button {
+        opacity: 0.9;
+        text-decoration: none;
+        color: #fff;
+        border-radius: 4px;
+        text-transform: uppercase;
+        background-color: #cc584c; /* xcp-ng red */
+        font-weight: 800;
+        text-align: center;
+        padding: 15px 32px;
+        white-space: nowrap;
+        border: none;
+        cursor: pointer;
+      }
 
-button:hover {background-color: #e09a93}
+      select {
+        padding: 0 .5em;
+        color: #cc584c;
+        cursor: pointer;
+        position: relative;
+        width: 15em;
+        height: 2em;
+        line-height: 3;
+        background: #fff;
+        overflow: hidden;
+        border-radius: .25em;
+        box-shadow: none;
+      }
 
-button:active {
-  background-color: #e09a93;
-  box-shadow: 0 1px #666;
-  transform: translateY(2px);
-}
+      input {
+        padding: 0 .5em;
+        color: #cc584c;
+        position: relative;
+        width: 15em;
+        height: 2em;
+        line-height: 3;
+        border-radius: .25em;
+        box-shadow: none;
+      }
 
-hr{
-	width: 150px;
-	height: 2px;
-	background-color: #cc584c; /* xcp-ng red */
-	border: 0;
-	margin-bottom: 40px;
-}
+      fieldset {
+        border: none;
+      }
 
-section{
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+      button:hover {
+        opacity: 1;
+      }
 
-	padding: 100px 100px;
-}
+      button:active {
+        background-color: #e09a93;
+        box-shadow: 0 1px #666;
+        transform: translateY(2px);
+      }
 
-@media (max-width: 1000px){
+      hr {
+        width: 20em;
+        height: 1px;
+        background-color: #263740; /* xcp-ng red */
+        border: 0;
+        margin-top: 3.5em;
+        margin-bottom: 0;
+      }
 
-	section{
-		padding: 100px 50px;
-	}
+      h2.title {
+        color: #414a4f;
+        text-transform: capitalize;
+        font: bold 32px 'Open Sans', sans-serif;
+        text-align: center;
+        margin-top: 0.5em;
+        margin-bottom: 1em;
+      }
 
-}
+      h3.subtitle {
+        color: #414a4f;
+        text-transform: capitalize;
+        font: bold 24px 'Open Sans', sans-serif;
+        margin-top: 1em;
+        margin-bottom: 0.2em;
+        text-align: center;
+      }
 
-@media (max-width: 600px){
+      h4 {
+        font-size: 1.2em;
+        margin-bottom: 0.4em;
+      }
 
-	section{
-		padding: 80px 30px;
-	}
+      /* cyrillic */
+      @font-face {
+        font-family: 'Oswald';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Oswald Regular'), local('Oswald-Regular'),
+          url(https://fonts.gstatic.com/s/oswald/v16/TK3iWkUHHAIjg752HT8Ghe4.woff2)
+            format('woff2');
+        unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+      }
+      /* vietnamese */
+      @font-face {
+        font-family: 'Oswald';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Oswald Regular'), local('Oswald-Regular'),
+          url(https://fonts.gstatic.com/s/oswald/v16/TK3iWkUHHAIjg752Fj8Ghe4.woff2)
+            format('woff2');
+        unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+      }
+      /* latin-ext */
+      @font-face {
+        font-family: 'Oswald';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Oswald Regular'), local('Oswald-Regular'),
+          url(https://fonts.gstatic.com/s/oswald/v16/TK3iWkUHHAIjg752Fz8Ghe4.woff2)
+            format('woff2');
+        unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
+          U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+      }
+      /* latin */
+      @font-face {
+        font-family: 'Oswald';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Oswald Regular'), local('Oswald-Regular'),
+          url(https://fonts.gstatic.com/s/oswald/v16/TK3iWkUHHAIjg752GT8G.woff2)
+            format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+          U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193,
+          U+2212, U+2215, U+FEFF, U+FFFD;
+      }
 
-}
+      /* Tooltip container */
+      .tooltip {
+        position: relative;
+        display: inline-block;
+      }
 
-section h3.title{
-	color: #414a4f;
-	text-transform: capitalize;
-	font: bold 32px 'Open Sans', sans-serif;
-	margin-bottom: 35px;
-	text-align: center;
-}
+      /* Tooltip text */
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        top: 100%;
+        left: 50%;
+        margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+        background-color: #263740;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 4px;
 
-section p{
-	max-width: 800px;
-	text-align: center;
-	margin-bottom: 35px;
-	padding: 0 20px;
-	line-height: 2;
-}
+        /* Position the tooltip text - see examples below! */
+        position: absolute;
+        z-index: 1;
+      }
 
-ul.grid{
-	width: 100%;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-}
+      /* Show the tooltip text when you mouse over the tooltip container */
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+      }
 
-/* cyrillic */
-@font-face {
-  font-family: 'Oswald';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Oswald Regular'), local('Oswald-Regular'), url(https://fonts.gstatic.com/s/oswald/v16/TK3iWkUHHAIjg752HT8Ghe4.woff2) format('woff2');
-  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-}
-/* vietnamese */
-@font-face {
-  font-family: 'Oswald';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Oswald Regular'), local('Oswald-Regular'), url(https://fonts.gstatic.com/s/oswald/v16/TK3iWkUHHAIjg752Fj8Ghe4.woff2) format('woff2');
-  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
-}
-/* latin-ext */
-@font-face {
-  font-family: 'Oswald';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Oswald Regular'), local('Oswald-Regular'), url(https://fonts.gstatic.com/s/oswald/v16/TK3iWkUHHAIjg752Fz8Ghe4.woff2) format('woff2');
-  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-/* latin */
-@font-face {
-  font-family: 'Oswald';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Oswald Regular'), local('Oswald-Regular'), url(https://fonts.gstatic.com/s/oswald/v16/TK3iWkUHHAIjg752GT8G.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-
-/*----------------------
- 	Features Section
+      /*----------------------
+  Section
 ----------------------*/
 
-.features{
-	background-color: #f7f7f7;
-}
+      .section {
+        margin-top: 2em;
+      }
 
-.features .grid li{
-	padding: 0 30px;
-	flex-basis: 33%;
-	text-align: center;
-}
+      /*----------------------
+  Features Section
+----------------------*/
 
-.features .grid li i{
-    font-size: 50px;
-    color: #cc584c; /* xcp-ng red */
-    margin-bottom: 25px;
-}
+      p.management {
+        min-height: 7em;
+        padding-left: 2em;
+        padding-right: 2em;
+        line-height: 1.6;
+      }
 
-.features .grid li h4{
-	color: #555;
-    font-size: 20px;
-    margin-bottom: 25px;
-}
+      p.options {
+        color: #cc584c;
+        padding: 0;
+        margin-top: 0.1em;
+        margin-bottom: 0.1em;
+      }
 
-.features .grid li p{
-    margin: 0;
-}
+      p.description {
+        padding-left: 2em;
+        padding-right: 2em;
+        margin-bottom: 1em;
+        line-height: 1.6;
+      }
 
-.features a.btn{
-	padding: 15px 40px;
-}
+      .preview {
+        border: 1px solid #a1a1a1;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
 
-.features p.management {
-  min-height: 200px;
-}
+      /*----------------------
+  Support Section
+----------------------*/
 
-@media (max-width: 1030px){
+      .support {
+        margin-top: 2em;
+      }
+      .support i {
+        font-size: 4em;
+        color: #cc584c;
+      }
 
-	.features .grid li{
-		flex-basis: 70%;
-		margin-bottom: 65px;
-	}
-
-	.features .grid li:last-child{
-		margin-bottom: 0;
-	}
-
-}
-
-
-@media (max-width: 600px){
-
-	.features .grid li{
-		flex-basis: 100%;
-	}
-
-}
-
-</style>
-</head>
-<body>
-<section class="features">
-	<h3 class="title">Manage your XCP-ng @PRODUCT_VERSION@</h3>
-	<p>You have various options to manage your XCP-ng - choose the one that fits best!</p>
-	<a href="https://github.com/xcp-ng/xcp/wiki" class="btn">Documentation</a>
-  <br style='margin-top:20px'>
-  <a href="https://xcp-ng.org/news/" class="btn" style='background-color:#263740'>Latest news</a>
-	<hr style='margin-top:20px'>
-	<ul class="grid">
-		<li>
-			<i class="fab fa-windows"></i>
-			<h4>XCP-ng Center</h4>
-			<p class="management">XCP-ng Center is a graphical Windows-based user interface for XCP-ng. Download it by using the button below.</p>
-			<a href="XCP-ng-Center.msi" class="btn">Download</a>
-		</li>
-		<li>
-			<i class="fab fa-chrome"></i>
-			<h4>Xen Orchestra Virtual Appliance</h4>
-			<p class="management"><a href="https://xen-orchestra.com/#!/xo-home">Xen Orchestra</a> is a virtual appliance covering all the administration, management, backup and cloud features you may need in your infrastructure.</p>
-			<a href="#ex1" class ="btn" rel="modal:open">Quick deploy</a>
-		</li>
-		<li>
-			<i class="fab fa-osi"></i>
-			<h4>Xen Orchestra Community Edition</h4>
-			<p class="management">You can build XO yourself to unlock all the features. There is no automatic updater in this version. Recommended for homelab - no pro support.</p>
-			<a href="https://xen-orchestra.com/docs/from_the_sources.html" target="_blank" class="btn">Documentation</a>
-		</li>
-	</div>
-</section>
-
-<section class="features">
-	<h3 class="title">Pro Support</h3>
-	<br>
-	<a href="https://xcp-ng.com/"><img src="./asset/xcp-ng-pro.jpg"/></a>
-	<p>XCP-ng is a high performance enterprise level hypervisor, responding to the most demanding company activities from SMBs to Datacenters. We have your back when it comes to pro support. Visit our dedicated website to learn more.</p>
-	<hr>
-	<a href="https://xcp-ng.com/" class="btn">Go Pro</a>
-
-<section class="contact">
-	<h3 class="title">Join our community</h3>
-	<p>Thousands of people are using XCP-ng, hundreds are contributing on our community forum. Become a part of our community!</p>
-	<hr>
-		<a href="https://xcp-ng.org/forum" class="btn">Community forum</a>
-</section>
-<!-- Modalcontent -->
-<div id="ex1" class="modal">
-  <p>SSH to your XCP-ng machine and execute the following:</p>
-    <code id="p1" style="color: #808080; background-color:#d9d9d9")> bash -c "$(curl -s http://xoa.io/deploy)"</code>
-        <button class="btn" onclick="copyToClipboard('#p1')"><i class="fas fa-paste"></i></button>
-  <p style="font-style: italic">This will automatically download/import/start the XOA appliance.</p>
-  <br>
-  <a href="#" rel="modal:close">Close</a>
-</div>
-</body>
+      .support p {
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap container-fluid">
+      <div>
+        <h2 class="title">Welcome to XCP-ng @PRODUCT_VERSION@</h2>
+        <div class="row">
+          <div class="col-xs">
+            <a href="https://github.com/xcp-ng/xcp/wiki" class="btn"
+              >Documentation</a
+            >
+            <a
+              href="https://xcp-ng.org/blog/"
+              class="btn"
+              style="background-color:#263740"
+              >Latest News</a
+            >
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="section">
+        <h3 class="subtitle">Management tools</h3>
+        <p>
+          You have various options to manage your XCP-ng - choose the one that
+          fits best!
+        </p>
+        <div class="row">
+          <div class="col-md">
+            <div class="box">
+              <h4>Xen Orchestra</h4>
+              <a href="#ex1" rel="modal:open"
+                ><img class="preview" src="./asset/xoa.jpg"
+              /></a>
+              <p class="options">
+                <span class="tooltip">
+                  <a
+                    href="https://xen-orchestra.com/#!/xo-features/webinterface?pk_campaign=xcp-ng-html"
+                  >
+                    <i class="fas fa-browser" style="font-size: 1.5em;"></i>
+                    <span class="tooltiptext">Web based</span>
+                  </a>
+                </span>
+                <span class="tooltip">
+                  <a href="https://github.com/vatesfr/xen-orchestra">
+                    <i class="fab fa-github" style="font-size: 1.5em;"></i>
+                    <span class="tooltiptext">Open Source</span>
+                  </a>
+                </span>
+                <span class="tooltip">
+                  <a
+                    href="https://xen-orchestra.com/#!/xo-home?pk_campaign=xcp-ng-html"
+                  >
+                    <i
+                      class="fas fa-user-headset"
+                      style="font-size: 1.5em;"
+                    ></i>
+                    <span class="tooltiptext">Pro Support available</span>
+                  </a>
+                </span>
+              </p>
+              <p class="management">
+                XO comes in a virtual appliance covering all the management,
+                backup and cloud features you may need in your infrastructure,
+                directly from your web browser.
+              </p>
+              <p>
+                <a href="#ex1" class="btn" rel="modal:open">Quick deploy</a>
+              </p>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="box">
+              <h4>XCP-ng Center</h4>
+              <a href="https://github.com/xcp-ng/xenadmin/releases/latest"
+                ><img class="preview" src="./asset/xcpngcenter.jpg"
+              /></a>
+              <p class="options">
+                <span class="tooltip">
+                  <i
+                    class="fab fa-windows"
+                    style="font-size: 1.5em; color:#263740"
+                  ></i>
+                  <span class="tooltiptext">Windows only</span>
+                </span>
+                <span class="tooltip">
+                  <a href="https://github.com/xcp-ng/xenadmin">
+                    <i class="fab fa-github" style="font-size: 1.5em;"></i>
+                    <span class="tooltiptext">Open Source</span>
+                  </a>
+                </span>
+                <span class="tooltip">
+                  <i
+                    class="fas fa-user-headset"
+                    style="font-size: 1.5em; color:#263740"
+                  ></i>
+                  <span class="tooltiptext">Community support only</span>
+                </span>
+              </p>
+              <p class="management">
+                XCP-ng Center is a graphical Windows-based user interface for
+                XCP-ng. Download it by using the button below.
+              </p>
+              <p>
+                <a
+                  href="https://github.com/xcp-ng/xenadmin/releases/latest"
+                  class="btn"
+                  >Download</a
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="section">
+        <h3 class="subtitle">Pro Support</h3>
+        <p>
+          XCP-ng is a high performance enterprise level hypervisor, responding
+          to the most demanding company activities from SMBs to Datacenters. We
+          have your back when it comes to pro support. Visit our dedicated
+          website to learn more.
+        </p>
+        <div class="row">
+          <div class="col-xs">
+            <div class="support">
+              <a href="https://xcp-ng.com?pk_campaign=xcp-ng-html"
+                ><i class="fas fa-user-headset"></i
+              ></a>
+              <p class="description">Pro Support 24/7/365</p>
+            </div>
+          </div>
+          <div class="col-xs">
+            <div class="support">
+              <a href="https://xcp-ng.com?pk_campaign=xcp-ng-html"
+                ><i class="fas fa-terminal"></i
+              ></a>
+              <p class="description">SSH remote support</p>
+            </div>
+          </div>
+          <div class="col-xs">
+            <div class="support">
+              <a href="https://xcp-ng.com?pk_campaign=xcp-ng-html"
+                ><i class="fas fa-wrench"></i
+              ></a>
+              <p class="description">Setup assistance</p>
+            </div>
+          </div>
+        </div>
+        <p>
+          <a href="https://xcp-ng.com?pk_campaign=xcp-ng-html" class="btn"
+            >Go Pro</a
+          >
+        </p>
+      </div>
+      <hr />
+      <div class="section">
+        <h3 class="subtitle">Join our community</h3>
+        <p class="description">
+          Thousands of people are using XCP-ng, hundreds are contributing on our
+          community forum. Become a part of our community!
+        </p>
+        <p>
+          <a href="https://xcp-ng.org/forum" class="btn">Community forum</a>
+        </p>
+      </div>
+      <!-- Modalcontent -->
+      <div id="ex1" class="modal">
+        <h3 class="subtitle">XOA quick deploy</h3>
+        <form id="connect" onsubmit="event.preventDefault(); connect()">
+          <fieldset>
+            <p>
+              <label>
+                Host username<br />
+                <input type="text" disabled value="root" />
+              </label>
+            </p>
+            <p>
+              <label>
+                Host password<br />
+                <input type="password" id="pwd" />
+              </label>
+            </p>
+            <p>
+              <em
+                ><i class="fas fa-info-circle"></i> This host's root
+                credentials</em
+              >
+            </p>
+            <p><button class="btn" type="submit">Connect</button></p>
+          </fieldset>
+        </form>
+        <form
+          id="config"
+          onsubmit="event.preventDefault(); setStep('config', 'accounts')"
+          style="display: none"
+        >
+          <fieldset>
+            <p>
+              <label>
+                Select a storage<br />
+                <select id="srs"></select>
+              </label>
+            </p>
+            <p>
+              <label>
+                Select a network<br />
+                <select id="networks"></select>
+              </label>
+            </p>
+            <p>
+              <label>
+                IP address of the XOA<br />
+                <input type="text" id="ip" />
+              </label>
+            </p>
+            <p>
+              <label>
+                Netmask<br />
+                <input type="text" placeholder="255.255.255.0" id="netmask" />
+              </label>
+            </p>
+            <p>
+              <label>
+                Gateway<br />
+                <input type="text" id="gateway" />
+              </label>
+            </p>
+            <p>
+              <label>
+                DNS<br />
+                <input type="text" placeholder="8.8.8.8" id="dns" />
+              </label>
+            </p>
+            <p>
+              <em
+                ><i class="fas fa-info-circle"></i> Leave everything empty to
+                use DHCP. Provide all the information otherwise.</em
+              >
+            </p>
+            <p><button class="btn" type="submit">Next</button></p>
+          </fieldset>
+        </form>
+        <form
+          id="accounts"
+          onsubmit="event.preventDefault(); deploy()"
+          style="display: none"
+        >
+          <fieldset>
+            <h4>Create an Admin account on your XOA</h4>
+            <p>
+              <label>
+                Username<br />
+                <input
+                  type="text"
+                  placeholder="admin@admin.net"
+                  id="adminEmail"
+                /> </label
+              ><br />
+              <label>
+                Password<br />
+                <input type="password" placeholder="admin" id="adminPwd" />
+              </label>
+            </p>
+            <h4>Register your XOA</h4>
+            <p>
+              <a href="https://xen-orchestra.com/#!/signup" target="_blank"
+                >Create an account</a
+              >
+            </p>
+            <p>
+              <label>
+                xen-orchestra.com username<br />
+                <input type="text" id="updaterEmail" /> </label
+              ><br />
+              <label>
+                xen-orchestra.com password<br />
+                <input type="password" id="updaterPwd" />
+              </label>
+            </p>
+            <p>
+              <em><i class="fas fa-info-circle"></i> You can do this later</em>
+            </p>
+            <p>
+              <button class="btn" type="submit">
+                <i class="fas fa-spinner fa-pulse" style="display: none;"></i>
+                <span id="deploy">Deploy</span>
+              </button>
+            </p>
+          </fieldset>
+        </form>
+        <br />
+        <a href="#" rel="modal:close">Close</a>
+      </div>
+    </div>
+  </body>
 </html>
