@@ -87,7 +87,7 @@ function connect() {
 function deploy() {
   const status = text => $('#deploy').text(text)
   const srRef = $('#srs').val()
-  status('Deploying XOA...')
+  status('Deploying XOA…')
   $('#config fieldset').attr('disabled', true)
   call(
     'VM.import',
@@ -98,7 +98,7 @@ function deploy() {
   )
     .then(([_vmRef]) => {
       vmRef = _vmRef
-      status('Configuring XOA...')
+      status('Configuring XOA…')
       const promises = []
       const ip = $('#ip').val()
       if (ip) {
@@ -149,7 +149,7 @@ function deploy() {
     })
     .then(() => {
       console.log('Starting XOA')
-      status('Starting XOA...')
+      status('Starting XOA…')
       return call(
         'VM.start',
         vmRef,
@@ -159,7 +159,7 @@ function deploy() {
     })
     .then(() => call('VM.get_guest_metrics', vmRef))
     .then(metricsRef => {
-      status('Almost there...')
+      status('Almost there…')
       let attempts = 60
       const waitForIp = () => {
         return call('VM_guest_metrics.get_networks', metricsRef).then(
@@ -194,7 +194,7 @@ function deploy() {
       ])
     })
     .then(() => {
-      status('XOA is ready! Redirecting...')
+      status('XOA is ready! Redirecting…')
       setTimeout(() => {
         window.location = `http://${$('#ip').val() || vmIp}`
       }, 3e3)
