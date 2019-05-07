@@ -6,7 +6,7 @@ let call,
 function _call(method, params) {
   console.log(`-> ${method}(${JSON.stringify(params)})`)
   return window
-    .fetch(`http://${host}/jsonrpc`, {
+    .fetch(`//${host}/jsonrpc`, {
       body: JSON.stringify({
         id: 0,
         jsonrpc: '2.0',
