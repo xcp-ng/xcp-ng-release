@@ -5,6 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script src="asset/jquery-3.3.1.min.js"></script>
 <script src="asset/jquery.modal.min.js"></script>
+<script src="asset/deploy.js"></script>
 <script>
 function copyToClipboard(element) {
   var $temp = $("<input>");
@@ -67,18 +68,27 @@ a.btn {
 	white-space: nowrap;
 }
 
-button{
-  background-color: #cc584c; /* xcp-ng red */
-  border: none;
-  color: white;
-  padding: 5px 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-	font-size: 16px;
-	}
+button {
+	opacity: 0.9;
+	text-decoration: none;
+	color: #fff;
+	border-radius: 4px;
+	text-transform: uppercase;
+	background-color: #cc584c; /* xcp-ng red */
+	font-weight: 800;
+	text-align: center;
+	padding: 15px 32px;
+	white-space: nowrap;
+	border: none;
+}
 
-button:hover {background-color: #e09a93}
+fieldset {
+	border: none;
+}
+
+button:hover {
+	opacity: 1;
+}
 
 button:active {
   background-color: #e09a93;
@@ -341,10 +351,87 @@ p.description {
 	</div>
 	<!-- Modalcontent -->
 	<div id="ex1" class="modal">
-		<p>SSH to your XCP-ng machine and execute the following:</p>
-			<code id="p1" style="color: #808080; background-color:#d9d9d9")> bash -c "$(curl -s http://xoa.io/deploy)"</code>
-					<button class="btn" onclick="copyToClipboard('#p1')"><i class="fas fa-paste"></i></button>
-		<p style="font-style: italic">This will automatically download/import/start the XOA appliance.</p>
+		<h3 class="subtitle">XCP-ng host credentials</h3>
+		<form id="connect" onsubmit="event.preventDefault(); connect()">
+			<fieldset>
+			  <p>
+				<label>
+				  Username<br />
+				  <input type="text" disabled value="root" />
+				</label>
+			  </p>
+			  <p>
+				<label>
+				  Password<br />
+				  <input type="password" id="pwd" autofocus />
+				</label>
+			  </p>
+			  <p>
+				<button class="btn" type="submit">
+				  Connect
+				</button>
+			  </p>
+			</fieldset>
+		  </form>
+		  <form
+			id="config"
+			onsubmit="event.preventDefault(); deploy()"
+			style="display: none"
+		  >
+			<fieldset>
+			  <p>
+				<label>
+				  Deploy on<br />
+				  <select id="srs"></select>
+				</label>
+			  </p>
+			  <p>
+				<label>
+				  IP (leave empty to use DHCP)<br />
+				  <input type="text" id="ip" />
+				</label>
+			  </p>
+			  <p>
+				<label>
+				  Netmask<br />
+				  <input type="text" placeholder="255.255.255.0" id="netmask" />
+				</label>
+			  </p>
+			  <p>
+				<label>
+				  Gateway<br />
+				  <input type="text" id="gateway" />
+				</label>
+			  </p>
+			  <p>
+				<label>
+				  DNS<br />
+				  <input type="text" placeholder="8.8.8.8" id="dns" />
+				</label>
+			  </p>
+			  <p>
+				<label>
+				  Create XO Admin account<br />
+				  <input
+					type="text"
+					placeholder="admin@admin.net"
+					id="adminEmail"
+				  />
+				</label>
+			  </p>
+			  <p>
+				<label>
+				  Choose password<br />
+				  <input type="password" placeholder="admin" id="adminPwd" />
+				</label>
+			  </p>
+			  <p>
+				<button class="btn" type="submit">
+				  <span id="deploy">Deploy</span>
+				</button>
+			  </p>
+            </fieldset>
+  		</form>
 		<br>
 		<a href="#" rel="modal:close">Close</a>
 	</div>
