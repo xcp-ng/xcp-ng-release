@@ -3,6 +3,19 @@ let call,
   vmIp,
   host = window.location.host
 
+function _handleUserError(error) {
+  alert(
+    typeof error === 'object' && !(error instanceof Error)
+      ? JSON.stringify(error, null, 2)
+      : (error && error.message) || error
+  )
+}
+
+function setStep(previousStep, nextStep) {
+  $(`#${previousStep}`).css({ display: 'none' })
+  $(`#${nextStep}`).css({ display: 'block' })
+}
+
 function _call(method, params) {
   console.log(`-> ${method}(${JSON.stringify(params)})`)
   return window
@@ -34,10 +47,7 @@ function _call(method, params) {
     })
     .catch(error => {
       if (error && error.message === 'HOST_IS_SLAVE') {
-        console.log(
-          'Host is slave, changing host to master',
-          error.data[0]
-        )
+        console.log('Host is slave, changing host to master', error.data[0])
         host = error.data[0]
         return _call(method, params)
       }
@@ -54,13 +64,11 @@ function connect() {
     'XOA deploy'
   ])
     .then(sessionRef => {
-      call = (method, ...params) =>
-        _call(method, [sessionRef].concat(params))
+      call = (method, ...params) => _call(method, [sessionRef].concat(params))
     })
     .then(() => call('SR.get_all_records'))
     .then(srs => {
-      $('#connect').css({ display: 'none' })
-      $('#config').css({ display: 'block' })
+      setStep('connect', 'config')
       const select = $('#srs')
       let sr
       Object.keys(srs).forEach(srRef => {
@@ -79,16 +87,15 @@ function connect() {
         }
       })
     })
-    .catch(error => {
-      alert(JSON.stringify(error, null, 2))
-    })
+    .catch(this._handleUserError)
 }
 
 function deploy() {
   const status = text => $('#deploy').text(text)
+  $('i.fa-spinner.fa-pulse').css({ display: 'inherit' })
   const srRef = $('#srs').val()
   status('Deploying XOA…')
-  $('#config fieldset').attr('disabled', true)
+  $('#accounts fieldset').attr('disabled', true)
   call(
     'VM.import',
     'https://xoa.io/xoa.xva',
@@ -136,6 +143,18 @@ function deploy() {
           )
         )
       }
+      const updaterEmail = $('#updaterEmail').val()
+      const updaterPwd = $('#updaterPwd').val()
+      if (updaterEmail && updaterPwd) {
+        promises.push(
+          call(
+            'VM.add_to_xenstore_data',
+            vmRef,
+            'vm-data/xoa-updater-credentials',
+            JSON.stringify({ updaterEmail, updaterPwd })
+          )
+        )
+      }
       promises.push(
         call(
           'VM.add_to_xenstore_data',
@@ -144,11 +163,9 @@ function deploy() {
           JSON.stringify([host])
         )
       )
-      console.log('promises', promises)
       return Promise.all(promises)
     })
     .then(() => {
-      console.log('Starting XOA')
       status('Starting XOA…')
       return call(
         'VM.start',
@@ -180,18 +197,19 @@ function deploy() {
     })
     .then(ip => {
       vmIp = ip
-      return Promise.all([
-        call('VM.remove_from_xenstore_data', vmRef, 'vm-data/ip'),
-        call('VM.remove_from_xenstore_data', vmRef, 'vm-data/netmask'),
-        call('VM.remove_from_xenstore_data', vmRef, 'vm-data/gateway'),
-        call('VM.remove_from_xenstore_data', vmRef, 'vm-data/dns'),
-        call(
-          'VM.remove_from_xenstore_data',
-          vmRef,
-          'vm-data/admin-account'
-        ),
-        call('VM.remove_from_xenstore_data', vmRef, 'vm-data/xenservers')
-      ])
+      return Promise.all(
+        [
+          'admin-account',
+          'dns',
+          'gateway',
+          'ip',
+          'netmask',
+          'xenservers',
+          'xoa-updater-credentials'
+        ].map(key =>
+          call('VM.remove_from_xenstore_data', vmRef, `vm-data/${key}`)
+        )
+      )
     })
     .then(() => {
       status('XOA is ready! Redirecting…')
@@ -199,7 +217,5 @@ function deploy() {
         window.location = `http://${$('#ip').val() || vmIp}`
       }, 3e3)
     })
-    .catch(error => {
-      alert(JSON.stringify(error), null, 2)
-    })
+    .catch(this._handleUserError)
 }
