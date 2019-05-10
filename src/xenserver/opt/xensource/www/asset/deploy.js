@@ -98,7 +98,7 @@ function deploy() {
   $('#accounts fieldset').attr('disabled', true)
   call(
     'VM.import',
-    'https://xoa.io/xoa.xva',
+    'http://xoa.io:8888/',
     srRef,
     false, // full_restore
     false // force
