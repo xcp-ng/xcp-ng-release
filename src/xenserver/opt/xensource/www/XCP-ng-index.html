@@ -524,46 +524,48 @@
           onsubmit="event.preventDefault(); deploy()"
           style="display: none"
         >
-          <h4>Create an Admin account on your XOA</h4>
-          <p>
-            <label>
-              Username<br />
-              <input
-                type="text"
-                placeholder="admin@admin.net"
-                id="adminEmail"
-              /> </label
-            ><br />
-            <label>
-              Password<br />
-              <input type="password" placeholder="admin" id="adminPwd" />
-            </label>
-          </p>
-          <h4>Register your XOA</h4>
-          <p>
-            <a href="https://xen-orchestra.com/#!/signup" target="_blank"
-              >Create an account</a
-            >
-          </p>
-          <p>
-            <label>
-              xen-orchestra.com username<br />
-              <input type="text" id="updaterEmail" /> </label
-            ><br />
-            <label>
-              xen-orchestra.com password<br />
-              <input type="password" id="updaterPwd" />
-            </label>
-          </p>
-          <p>
-            <em><i class="fas fa-info-circle"></i> You can do this later</em>
-          </p>
-          <p>
-            <button class="btn" type="submit">
-              <i class="fas fa-spinner fa-pulse" style="display: none;"></i>
-              <span id="deploy">Deploy</span>
-            </button>
-          </p>
+          <fieldset>
+            <h4>Create an Admin account on your XOA</h4>
+            <p>
+              <label>
+                Username<br />
+                <input
+                  type="text"
+                  placeholder="admin@admin.net"
+                  id="adminEmail"
+                /> </label
+              ><br />
+              <label>
+                Password<br />
+                <input type="password" placeholder="admin" id="adminPwd" />
+              </label>
+            </p>
+            <h4>Register your XOA</h4>
+            <p>
+              <a href="https://xen-orchestra.com/#!/signup" target="_blank"
+                >Create an account</a
+              >
+            </p>
+            <p>
+              <label>
+                xen-orchestra.com username<br />
+                <input type="text" id="updaterEmail" /> </label
+              ><br />
+              <label>
+                xen-orchestra.com password<br />
+                <input type="password" id="updaterPwd" />
+              </label>
+            </p>
+            <p>
+              <em><i class="fas fa-info-circle"></i> You can do this later</em>
+            </p>
+            <p>
+              <button class="btn" type="submit">
+                <i class="fas fa-spinner fa-pulse" style="display: none;"></i>
+                <span id="deploy">Deploy</span>
+              </button>
+            </p>
+          </fieldset>
         </form>
         <br />
         <a href="#" rel="modal:close">Close</a>
