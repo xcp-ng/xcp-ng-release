@@ -87,7 +87,10 @@ function connect() {
         }
       })
     })
-    .catch(this._handleUserError)
+    .catch(err => {
+      $('#connect fieldset').attr('disabled', false)
+      this._handleUserError(err)
+    })
 }
 
 function deploy() {
@@ -217,5 +220,10 @@ function deploy() {
         window.location = `http://${$('#ip').val() || vmIp}`
       }, 3e3)
     })
-    .catch(this._handleUserError)
+    .catch(err => {
+      $('#accounts fieldset').attr('disabled', false)
+      $('i.fa-spinner.fa-pulse').css({ display: 'none' })
+      status('Deploy')
+      this._handleUserError(err)
+    })
 }
