@@ -16,10 +16,10 @@ function setStep(previousStep, nextStep) {
   $(`#${nextStep}`).css({ display: 'block' })
 }
 
-function _call(method, params) {
+function _jsonRpcCall(url, method, params) {
   console.log(`-> ${method}(${JSON.stringify(params)})`)
   return window
-    .fetch(`//${host}/jsonrpc`, {
+    .fetch(url, {
       body: JSON.stringify({
         id: 0,
         jsonrpc: '2.0',
@@ -45,6 +45,9 @@ function _call(method, params) {
         throw json.error
       })
     })
+}
+function _call(method, params) {
+  return _jsonRpcCall(`//${host}/jsonrpc`, method, params)
     .catch(error => {
       if (error && error.message === 'HOST_IS_SLAVE') {
         console.log('Host is slave, changing host to master', error.data[0])
@@ -87,7 +90,10 @@ function connect() {
         }
       })
     })
-    .catch(this._handleUserError)
+    .catch(err => {
+      $('#connect fieldset').attr('disabled', false)
+      this._handleUserError(err)
+    })
 }
 
 function deploy() {
@@ -96,13 +102,27 @@ function deploy() {
   const srRef = $('#srs').val()
   status('Deploying XOA…')
   $('#accounts fieldset').attr('disabled', true)
-  call(
-    'VM.import',
-    'http://xoa.io:8888/',
-    srRef,
-    false, // full_restore
-    false // force
-  )
+  const updaterEmail = $('#updaterEmail').val()
+  const updaterPwd = $('#updaterPwd').val()
+  Promise.resolve()
+    .then(() => {
+      if (updaterEmail && updaterPwd) {
+        return _jsonRpcCall(
+          'https://xen-orchestra.com/api',
+          'authenticate',
+          { email: updaterEmail, password: updaterPwd }
+        )
+      }
+    })
+    .then(() =>
+      call(
+        'VM.import',
+        'http://xoa.io:8888/',
+        srRef,
+        false, // full_restore
+        false // force
+      )
+    )
     .then(([_vmRef]) => {
       vmRef = _vmRef
       status('Configuring XOA…')
@@ -143,15 +163,13 @@ function deploy() {
           )
         )
       }
-      const updaterEmail = $('#updaterEmail').val()
-      const updaterPwd = $('#updaterPwd').val()
       if (updaterEmail && updaterPwd) {
         promises.push(
           call(
             'VM.add_to_xenstore_data',
             vmRef,
             'vm-data/xoa-updater-credentials',
-            JSON.stringify({ updaterEmail, updaterPwd })
+            JSON.stringify({ email: updaterEmail, password: updaterPwd })
           )
         )
       }
@@ -217,5 +235,10 @@ function deploy() {
         window.location = `http://${$('#ip').val() || vmIp}`
       }, 3e3)
     })
-    .catch(this._handleUserError)
+    .catch(err => {
+      $('#accounts fieldset').attr('disabled', false)
+      $('i.fa-spinner.fa-pulse').css({ display: 'none' })
+      status('Deploy')
+      this._handleUserError(err)
+    })
 }
