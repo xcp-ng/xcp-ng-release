@@ -151,7 +151,7 @@ function deploy() {
             'VM.add_to_xenstore_data',
             vmRef,
             'vm-data/xoa-updater-credentials',
-            JSON.stringify({ updaterEmail, updaterPwd })
+            JSON.stringify({ email: updaterEmail, password: updaterPwd })
           )
         )
       }
