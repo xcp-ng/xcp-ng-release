@@ -47,15 +47,14 @@ function _jsonRpcCall(url, method, params) {
     })
 }
 function _call(method, params) {
-  return _jsonRpcCall(`//${host}/jsonrpc`, method, params)
-    .catch(error => {
-      if (error && error.message === 'HOST_IS_SLAVE') {
-        console.log('Host is slave, changing host to master', error.data[0])
-        host = error.data[0]
-        return _call(method, params)
-      }
-      throw error
-    })
+  return _jsonRpcCall(`//${host}/jsonrpc`, method, params).catch(error => {
+    if (error && error.message === 'HOST_IS_SLAVE') {
+      console.log('Host is slave, changing host to master', error.data[0])
+      host = error.data[0]
+      return _call(method, params)
+    }
+    throw error
+  })
 }
 
 function connect() {
@@ -69,15 +68,22 @@ function connect() {
     .then(sessionRef => {
       call = (method, ...params) => _call(method, [sessionRef].concat(params))
     })
-    .then(() => call('SR.get_all_records'))
-    .then(srs => {
+    .then(() =>
+      Promise.all([
+        call('SR.get_all_records'),
+        call('pool.get_all_records'),
+        call('network.get_all_records'),
+        call('PIF.get_all_records')
+      ])
+    )
+    .then(([srs, pools, networks, pifs]) => {
       setStep('connect', 'config')
-      const select = $('#srs')
+      const selectSr = $('#srs')
       let sr
       Object.keys(srs).forEach(srRef => {
         sr = srs[srRef]
         if (sr.content_type !== 'iso' && sr.physical_size > 0) {
-          select.append(
+          selectSr.append(
             $('<option/>')
               .val(srRef)
               .text(
@@ -89,6 +95,25 @@ function connect() {
           )
         }
       })
+      const { default_SR } = pools[Object.keys(pools)[0]]
+      if (default_SR !== undefined) {
+        selectSr.val(default_SR)
+      }
+      const selectNetwork = $('#networks')
+      let network
+      Object.keys(networks).forEach(networkRef => {
+        network = networks[networkRef]
+        selectNetwork.append(
+          $('<option/>')
+            .val(networkRef)
+            .data('mtu', network.MTU)
+            .text(network.name_label)
+        )
+      })
+      const managementPif = Object.values(pifs).find(pif => pif.management)
+      if (managementPif && managementPif.network !== undefined) {
+        selectNetwork.val(managementPif.network)
+      }
     })
     .catch(err => {
       $('#connect fieldset').attr('disabled', false)
@@ -107,11 +132,10 @@ function deploy() {
   Promise.resolve()
     .then(() => {
       if (updaterEmail && updaterPwd) {
-        return _jsonRpcCall(
-          'https://xen-orchestra.com/api',
-          'authenticate',
-          { email: updaterEmail, password: updaterPwd }
-        )
+        return _jsonRpcCall('https://xen-orchestra.com/api', 'authenticate', {
+          email: updaterEmail,
+          password: updaterPwd
+        })
       }
     })
     .then(() =>
@@ -181,6 +205,29 @@ function deploy() {
           JSON.stringify([host])
         )
       )
+
+      const network = $('#networks').val()
+      const MTU = $('#networks')
+        .find(':selected')
+        .data('mtu')
+      promises.push(
+        call('VM.get_VIFs', vmRef)
+          .then(([vifRef]) => call('VIF.destroy', vifRef))
+          .then(() => call('VM.get_allowed_VIF_devices', vmRef))
+          .then(devices =>
+            call('VIF.create', {
+              device: devices[0],
+              MAC: '',
+              MTU,
+              network,
+              other_config: {},
+              qos_algorithm_params: {},
+              qos_algorithm_type: '',
+              VM: vmRef
+            })
+          )
+      )
+
       return Promise.all(promises)
     })
     .then(() => {
@@ -195,7 +242,7 @@ function deploy() {
     .then(() => call('VM.get_guest_metrics', vmRef))
     .then(metricsRef => {
       status('Almost there…')
-      let attempts = 60
+      let attempts = 120
       const waitForIp = () => {
         return call('VM_guest_metrics.get_networks', metricsRef).then(
           networks => {
