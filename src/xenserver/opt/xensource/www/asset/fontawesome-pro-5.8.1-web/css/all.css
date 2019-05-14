@@ -228,7 +228,7 @@ readers do not read off random characters that represent icons */
   font-style: normal;
   font-weight: normal;
   font-display: auto;
-  src: url("../webfonts/fa-brands-400.woff") format("woff"), url("../webfonts/fa-brands-400.svg#fontawesome") format("svg"); }
+  src: url("../webfonts/fa-brands-400.woff") format("woff"); }
 
 .fab {
   font-family: 'Font Awesome 5 Brands'; }
@@ -237,7 +237,7 @@ readers do not read off random characters that represent icons */
   font-style: normal;
   font-weight: 900;
   font-display: auto;
-  src: url("../webfonts/fa-solid-900.woff") format("woff"), url("../webfonts/fa-solid-900.svg#fontawesome") format("svg"); }
+  src: url("../webfonts/fa-solid-900.woff") format("woff"); }
 
 .fa,
 .fas {
