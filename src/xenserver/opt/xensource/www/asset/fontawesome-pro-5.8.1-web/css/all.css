@@ -188,8 +188,8 @@ readers do not read off random characters that represent icons */
 .fa-github:before {
   content: "\f09b"; }
 
-.fa-info:before {
-  content: "\f129"; }
+.fa-info-circle:before {
+  content: "\f05a"; }
 
 .fa-spinner:before {
   content: "\f110"; }
