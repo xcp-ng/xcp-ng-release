@@ -201,7 +201,7 @@ function deploy() {
         call(
           'VM.add_to_xenstore_data',
           vmRef,
-          'vm-data/xenservers',
+          'vm-data/xen-servers',
           JSON.stringify([host])
         )
       )
@@ -269,7 +269,7 @@ function deploy() {
           'gateway',
           'ip',
           'netmask',
-          'xenservers',
+          'xen-servers',
           'xoa-updater-credentials'
         ].map(key =>
           call('VM.remove_from_xenstore_data', vmRef, `vm-data/${key}`)
