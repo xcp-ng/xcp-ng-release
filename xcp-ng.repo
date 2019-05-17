@@ -14,9 +14,9 @@ gpgcheck=1
 repo_gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-xcpng
 
-[xcp-ng-updates_testing]
-name=XCP-ng Updates Testing Repository
-baseurl=http://mirrors.xcp-ng.org/8/8.0/updates_testing/x86_64/
+[xcp-ng-testing]
+name=XCP-ng Testing Repository
+baseurl=http://mirrors.xcp-ng.org/8/8.0/testing/x86_64/
 enabled=0
 gpgcheck=1
 repo_gpgcheck=1
