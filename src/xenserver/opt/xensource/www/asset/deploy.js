@@ -202,7 +202,12 @@ function deploy() {
           'VM.add_to_xenstore_data',
           vmRef,
           'vm-data/xen-servers',
-          JSON.stringify([host])
+          JSON.stringify([{
+            allowUnauthorized: true,
+            host,
+            password: $('#pwd').val(),
+            username: 'root'
+          }])
         )
       )
 
