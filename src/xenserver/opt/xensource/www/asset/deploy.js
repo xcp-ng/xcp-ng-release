@@ -127,14 +127,17 @@ function deploy() {
   const srRef = $('#srs').val()
   status('Deploying XOA…')
   $('#accounts fieldset').attr('disabled', true)
+  let registrationToken
   const updaterEmail = $('#updaterEmail').val()
   const updaterPwd = $('#updaterPwd').val()
   Promise.resolve()
     .then(() => {
       if (updaterEmail && updaterPwd) {
-        return _jsonRpcCall('https://xen-orchestra.com/api', 'authenticate', {
+        return _jsonRpcCall('https://xen-orchestra.com/api', 'registerXoa', {
           email: updaterEmail,
           password: updaterPwd
+        }).then(_registrationToken => {
+          registrationToken = _registrationToken
         })
       }
     })
@@ -187,13 +190,13 @@ function deploy() {
           )
         )
       }
-      if (updaterEmail && updaterPwd) {
+      if (registrationToken) {
         promises.push(
           call(
             'VM.add_to_xenstore_data',
             vmRef,
             'vm-data/xoa-updater-credentials',
-            JSON.stringify({ email: updaterEmail, password: updaterPwd })
+            JSON.stringify({ email: updaterEmail, registrationToken })
           )
         )
       }
