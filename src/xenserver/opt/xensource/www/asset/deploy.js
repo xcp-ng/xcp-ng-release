@@ -197,6 +197,17 @@ function deploy() {
           )
         )
       }
+      const xoaPwd = $('#xoaPwd').val()
+      if (xoaPwd) {
+        promises.push(
+          call(
+            'VM.add_to_xenstore_data',
+            vmRef,
+            'vm-data/system-account-xoa-password',
+            xoaPwd
+          )
+        )
+      }
       promises.push(
         call(
           'VM.add_to_xenstore_data',
