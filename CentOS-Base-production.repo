@@ -8,7 +8,16 @@
 # If the mirrorlist= does not work for you, as a fall back you can try the 
 # remarked out baseurl= line instead.
 #
+
+# ***     XCP-ng warning    ***
+# Do NOT enable the repositories below.
+# If you really need to install something from those, you can do it with the
+# --enablerepo parameter to the yum command. At your own risks.
 #
+# Example:     yum install somepackage --enablerepo=base
+# Another one: yum install somepackage --enablerepo=base,updates
+#
+# *** end of XCP-ng warning ***
 
 [base]
 name=CentOS-$releasever - Base
