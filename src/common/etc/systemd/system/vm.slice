@@ -1,0 +1,8 @@
+[Unit]
+Description=VM blkio slice
+
+[Slice]
+BlockIOWeight=100
+
+[Install]
+WantedBy=multi-user.target

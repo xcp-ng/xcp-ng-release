@@ -5,6 +5,7 @@ After=syslog.target network.target lldpad.service xcp-networkd.service openvswit
 [Service]
 Type=oneshot
 EnvironmentFile=/etc/sysconfig/fcoe
+ExecStartPre=/sbin/modprobe -qa $SUPPORTED_DRIVERS
 ExecStart=/opt/xensource/libexec/fcoe_driver --init
 
 [Install]
