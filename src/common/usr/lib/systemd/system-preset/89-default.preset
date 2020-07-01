@@ -21,7 +21,6 @@ disable restorecond.service
 disable bluetooth.*
 disable avahi-daemon.*
 disable cups.*
-enable xs-firstboot.service
 enable interface-rename.service
 
 # The various syslog implementations
@@ -52,6 +51,7 @@ enable mpathcount.socket
 enable xs-sm.service
 enable sm-mpath-root.service
 enable vm.slice
+enable gfs2-space-monitor.service
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=855372
 disable mdmonitor.service
@@ -136,6 +136,7 @@ enable update-issue.service
 enable lldpad.service
 enable xs-fcoe.service
 enable fcoe.service
+enable restoreeswitchcfg.service
 
 # Enable portreserve for xha (CA-118361)
 enable portreserve.service
@@ -162,3 +163,10 @@ enable xcp-rrdd-xenpm.service
 enable xapi-nbd.path
 enable varstored-guard.service
 enable secureboot-certificates.service
+enable create-guest-templates.service
+enable import-trusted-keys.service
+enable storage-init.service
+enable upgrade-likewise-to-pbis.service
+enable generate-iscsi-iqn.service
+enable control-domain-params-init.service
+enable network-init.service
