@@ -291,7 +291,9 @@ function deploy() {
           'xen-servers',
           'xoa-updater-credentials'
         ].map(key =>
-          call('VM.remove_from_xenstore_data', vmRef, `vm-data/${key}`)
+          call('VM.remove_from_xenstore_data', vmRef, `vm-data/${key}`).catch(error => {
+            console.warn('VM.remove_from_xenstore_data', key, error)
+          })
         )
       )
     })
