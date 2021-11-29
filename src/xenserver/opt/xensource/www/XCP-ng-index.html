@@ -41,6 +41,10 @@
         margin: 0 auto;
       }
 
+      .danger {
+        color: #d9534f;
+      }
+
       p {
         text-align: center;
         padding: 0.5em 1em;
@@ -475,7 +479,7 @@
         </form>
         <form
           id="config"
-          onsubmit="event.preventDefault(); setStep('config', 'accounts')"
+          onsubmit="event.preventDefault(); submitConfig()"
           style="display: none"
         >
           <fieldset>
@@ -490,6 +494,15 @@
                 Select a network<br />
                 <select id="networks"></select>
               </label>
+            </p>
+            <p id="ip-error" style="display: none">
+              <em class="danger"
+                ><i class="fas fa-exclamation-triangle"></i>
+                <span
+                  >You entered the same IP address as your host. Please choose a
+                  different one for your XOA:</span
+                ></em
+              >
             </p>
             <p>
               <label>

@@ -121,6 +121,17 @@ function connect() {
     })
 }
 
+function submitConfig() {
+  const ipError = $('#ip-error')
+  ipError.hide()
+  const ip = $('#ip').val()
+  if (ip === window.location.hostname) {
+    ipError.show()
+    return
+  }
+  setStep('config', 'accounts')
+}
+
 function deploy() {
   const status = text => $('#deploy').text(text)
   $('i.fa-spinner.fa-pulse').css({ display: 'inherit' })
