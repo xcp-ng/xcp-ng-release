@@ -185,6 +185,9 @@ readers do not read off random characters that represent icons */
 .fa-browser:before {
   content: "\f37e"; }
 
+.fa-exclamation-triangle:before {
+  content: "\f071"; }
+
 .fa-github:before {
   content: "\f09b"; }
 
