@@ -111,9 +111,9 @@ def fcoe_init():
     ifs = [intf for intf in get_all_ifs() if get_fcoe_capability(intf) and
                                              (not is_interface_blacklisted(intf)) and
                                              (not is_interface_bonded(intf))]
-    bfs_interfaces = get_all_ether_interface_of_fcoe_instance()
 
     if ifs:
+        bfs_interfaces = get_all_ether_interface_of_fcoe_instance()
         try:
             if backend == 'bridge':
                 execute(['/sbin/ebtables', '-t', 'broute', '-D', 'BROUTING', '-p', '0x8914', '-j', 'DROP'])
