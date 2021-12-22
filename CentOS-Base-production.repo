@@ -17,6 +17,8 @@
 # Example:     yum install somepackage --enablerepo=base
 # Another one: yum install somepackage --enablerepo=base,updates
 #
+# See https://xcp-ng.org/docs/additionalpackages.html
+#
 # *** end of XCP-ng warning ***
 
 [base]
