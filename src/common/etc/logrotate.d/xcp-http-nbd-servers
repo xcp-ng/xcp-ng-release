@@ -1,0 +1,5 @@
+/var/log/xcp-http-nbd-server.log
+/var/log/xcp-nbd-http-server.log
+{
+    missingok
+}
