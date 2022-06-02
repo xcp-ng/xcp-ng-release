@@ -102,7 +102,7 @@
         box-shadow: none;
       }
 
-      input {
+      input:not([type=checkbox]) {
         padding: 0 .5em;
         color: #cc584c;
         position: relative;
@@ -587,6 +587,12 @@
             </p>
             <p>
               <em><i class="fas fa-info-circle"></i> You can do this later</em>
+            </p>
+            <p>
+              <label>
+                <input type="checkbox" id="useIpv6" />
+                <span>Redirect to IPv6 if possible</span>
+              </label>
             </p>
             <p>
               <button class="btn" type="submit">

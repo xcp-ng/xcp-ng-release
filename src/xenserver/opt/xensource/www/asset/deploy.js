@@ -1,6 +1,6 @@
 let call,
   vmRef,
-  vmIp,
+  vmIps,
   host = window.location.host
 
 function _handleUserError(error) {
@@ -24,13 +24,13 @@ function _jsonRpcCall(url, method, params) {
         id: 0,
         jsonrpc: '2.0',
         method,
-        params
+        params,
       }),
       method: 'POST',
       headers: new Headers({
         Accept: 'application/json',
-        'Content-Type': 'application/json'
-      })
+        'Content-Type': 'application/json',
+      }),
     })
     .then(res => {
       if (!res.ok) {
@@ -63,7 +63,7 @@ function connect() {
     'root',
     $('#pwd').val(),
     '2.3',
-    'XOA deploy'
+    'XOA deploy',
   ])
     .then(sessionRef => {
       call = (method, ...params) => _call(method, [sessionRef].concat(params))
@@ -73,7 +73,7 @@ function connect() {
         call('SR.get_all_records'),
         call('pool.get_all_records'),
         call('network.get_all_records'),
-        call('PIF.get_all_records')
+        call('PIF.get_all_records'),
       ])
     )
     .then(([srs, pools, networks, pifs]) => {
@@ -146,7 +146,7 @@ function deploy() {
       if (updaterEmail && updaterPwd) {
         return _jsonRpcCall('https://xen-orchestra.com/api', 'registerXoa', {
           email: updaterEmail,
-          password: updaterPwd
+          password: updaterPwd,
         }).then(_registrationToken => {
           registrationToken = _registrationToken
         })
@@ -227,19 +227,19 @@ function deploy() {
           'VM.add_to_xenstore_data',
           vmRef,
           'vm-data/xen-servers',
-          JSON.stringify([{
-            allowUnauthorized: true,
-            host,
-            password: $('#pwd').val(),
-            username: 'root'
-          }])
+          JSON.stringify([
+            {
+              allowUnauthorized: true,
+              host,
+              password: $('#pwd').val(),
+              username: 'root',
+            },
+          ])
         )
       )
 
       const network = $('#networks').val()
-      const MTU = $('#networks')
-        .find(':selected')
-        .data('mtu')
+      const MTU = $('#networks').find(':selected').data('mtu')
       promises.push(
         call('VM.get_VIFs', vmRef)
           .then(([vifRef]) => call('VIF.destroy', vifRef))
@@ -253,7 +253,7 @@ function deploy() {
               other_config: {},
               qos_algorithm_params: {},
               qos_algorithm_type: '',
-              VM: vmRef
+              VM: vmRef,
             })
           )
       )
@@ -273,25 +273,40 @@ function deploy() {
     .then(metricsRef => {
       status('Almost there…')
       let attempts = 120
-      const waitForIp = () => {
-        return call('VM_guest_metrics.get_networks', metricsRef).then(
-          networks => {
-            if (networks && networks['0/ip'] !== undefined) {
-              return networks['0/ip']
+      const waitForIp = () =>
+        call('VM_guest_metrics.get_networks', metricsRef).then(networks => {
+          const ipv4 = networks === undefined ? undefined : networks['0/ip']
+          const [, ipv6] =
+            (networks === undefined
+              ? undefined
+              : Object.entries(networks).find(
+                  ([key, ip]) =>
+                    /^0\/ipv6\/\d+$/.test(key) && !ip.startsWith('fe80:') // Ignore link-local addresses
+                )) || []
+
+          if (ipv4 !== undefined || ipv6 !== undefined) {
+            // If one IP was found, wait just a bit more for the other one
+            if (attempts > 30) {
+              attempts = 30
             }
-            if (attempts-- === 0) {
-              throw 'XOA not responding'
+
+            if (attempts === 0 || (ipv4 !== undefined && ipv6 !== undefined)) {
+              return { ipv4, ipv6 }
             }
-            return new Promise((resolve, reject) =>
-              setTimeout(() => waitForIp().then(resolve, reject), 1e3)
-            )
           }
-        )
-      }
+
+          if (attempts-- === 0) {
+            throw new Error('XOA not responding')
+          }
+
+          return new Promise((resolve, reject) =>
+            setTimeout(() => waitForIp().then(resolve, reject), 1e3)
+          )
+        })
       return waitForIp()
     })
-    .then(ip => {
-      vmIp = ip
+    .then(ips => {
+      vmIps = ips
       return Promise.all(
         [
           'admin-account',
@@ -300,18 +315,34 @@ function deploy() {
           'ip',
           'netmask',
           'xen-servers',
-          'xoa-updater-credentials'
+          'xoa-updater-credentials',
         ].map(key =>
-          call('VM.remove_from_xenstore_data', vmRef, `vm-data/${key}`).catch(error => {
-            console.warn('VM.remove_from_xenstore_data', key, error)
-          })
+          call('VM.remove_from_xenstore_data', vmRef, `vm-data/${key}`).catch(
+            error => {
+              console.warn('VM.remove_from_xenstore_data', key, error)
+            }
+          )
         )
       )
     })
     .then(() => {
+      let ip = $('#ip').val()
+
+      if (ip === '') {
+        const ipv6 = vmIps.ipv6 === undefined ? undefined : `[${vmIps.ipv6}]`
+        const ipv4 = vmIps.ipv4
+        if ($('#useIpv6').is(':checked')) {
+          ip = ipv6 || ipv4
+        } else {
+          ip = ipv4 || ipv6
+        }
+      } else if (ip.includes(':')) {
+        ip = `[${ip}]`
+      }
+
       status('XOA is ready! Redirecting…')
       setTimeout(() => {
-        window.location = `https://${$('#ip').val() || vmIp}`
+        window.location = `https://${ip}`
       }, 3e3)
     })
     .catch(err => {
