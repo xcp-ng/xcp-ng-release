@@ -311,7 +311,7 @@ function deploy() {
     .then(() => {
       status('XOA is ready! Redirecting…')
       setTimeout(() => {
-        window.location = `http://${$('#ip').val() || vmIp}`
+        window.location = `https://${$('#ip').val() || vmIp}`
       }, 3e3)
     })
     .catch(err => {
