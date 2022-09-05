@@ -10,8 +10,8 @@ disable systemd-readahead-collect.service
 enable sshd.service
 enable atd.*
 enable crond.*
-disable chronyd.service
-disable chrony-wait.service
+enable chronyd.service
+enable chrony-wait.service
 enable rpcbind.*
 disable NetworkManager.service
 disable NetworkManager-dispatcher.service
