@@ -1,6 +1,6 @@
 [xcp-ng-base]
 name=XCP-ng Base Repository
-baseurl=http://mirrors.xcp-ng.org/8/8.2/base/x86_64/ http://updates.xcp-ng.org/8/8.2/base/x86_64/
+baseurl=http://mirrors.xcp-ng.org/8/8.3/base/x86_64/ http://updates.xcp-ng.org/8/8.3/base/x86_64/
 enabled=1
 gpgcheck=1
 repo_gpgcheck=1
@@ -8,7 +8,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-xcpng
 
 [xcp-ng-updates]
 name=XCP-ng Updates Repository
-baseurl=http://mirrors.xcp-ng.org/8/8.2/updates/x86_64/ http://updates.xcp-ng.org/8/8.2/updates/x86_64/
+baseurl=http://mirrors.xcp-ng.org/8/8.3/updates/x86_64/ http://updates.xcp-ng.org/8/8.3/updates/x86_64/
 enabled=1
 gpgcheck=1
 repo_gpgcheck=1
@@ -16,7 +16,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-xcpng
 
 [xcp-ng-testing]
 name=XCP-ng Testing Repository
-baseurl=http://mirrors.xcp-ng.org/8/8.2/testing/x86_64/ http://updates.xcp-ng.org/8/8.2/testing/x86_64/
+baseurl=http://mirrors.xcp-ng.org/8/8.3/testing/x86_64/ http://updates.xcp-ng.org/8/8.3/testing/x86_64/
 enabled=0
 gpgcheck=1
 repo_gpgcheck=1

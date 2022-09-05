@@ -52,6 +52,7 @@ enable xs-sm.service
 enable sm-mpath-root.service
 enable vm.slice
 enable gfs2-space-monitor.service
+enable glock-logging.timer
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=855372
 disable mdmonitor.service
