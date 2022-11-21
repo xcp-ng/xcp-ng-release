@@ -70,7 +70,7 @@ def get_backend_type():
 
 def get_all_ether_interface_of_fcoe_instance():
     interfaces = []
-    output = execute(['fcoeadm', '-i'])
+    output = execute(['fcoeadm', '-i'], quiet=True)
     if output is not None:
         for line in output.split('\n'):
             line = line.strip()
@@ -136,7 +136,15 @@ def fcoe_init():
 
             if intf not in bfs_interfaces:
                 logger.info('Executing fipvlan on %s' % intf)
-                execute(['fipvlan', '-c', '-s', intf])
+                p = subprocess.Popen(['fipvlan', '-c', '-s', intf],
+                                     stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                out, err = p.communicate()
+
+                if p.returncode == errno.ENODEV:
+                    logger.info('%s: No fibre channel forwarders found', intf)
+                elif p.returncode != 0:
+                    logger.error('fipvlan on %s returned %d out: %s err: %s',
+                                 intf, p.returncode, out, err)
         else:
             fcoemon_needed = True
             shutil.copyfile('/etc/fcoe/cfg-ethx', '/etc/fcoe/cfg-' + intf)
