@@ -9,8 +9,8 @@ unset IP
 unset BANNER
 unset HOSTTYPE
 
-if [ ! -z "${PRODUCT_VERSION}" ]; then
-    BANNER="${COMPANY_PRODUCT_BRAND} Host ${PRODUCT_VERSION}"
+if [ ! -z "${PRODUCT_VERSION_TEXT}" ]; then
+    BANNER="${COMPANY_PRODUCT_BRAND} Host ${PRODUCT_VERSION_TEXT}"
     HOSTTYPE="${PRODUCT_BRAND} Host"
     if [ -n "${BRAND_CONSOLE_URL}" ]; then
         MANAGE="To manage this server please use Xen Orchestra.
