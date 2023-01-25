@@ -2,7 +2,9 @@
   font-family: "icons";
   src: url("./icons.woff2?6fd33f90b90d0ac43e450f459069f7f3") format("woff2"), url("./icons.svg?6fd33f90b90d0ac43e450f459069f7f3#icons") format("svg");
 }
-.icon::before, [class^=icon-]::before, [class*=" icon-"]::before {
+.icon::before,
+[class^="icon-"]::before,
+[class*=" icon-"]::before {
   font-family: icons !important;
   font-style: normal;
   font-weight: normal !important;
