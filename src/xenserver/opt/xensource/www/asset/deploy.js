@@ -134,7 +134,7 @@ function submitConfig() {
 
 function deploy() {
   const status = text => $('#deploy').text(text)
-  $('i.fa-spinner.fa-pulse').css({ display: 'inherit' })
+  $('.block-spinner').css({ display: 'inherit' })
   const srRef = $('#srs').val()
   status('Deploying XOA…')
   $('#accounts fieldset').attr('disabled', true)
@@ -316,7 +316,7 @@ function deploy() {
     })
     .catch(err => {
       $('#accounts fieldset').attr('disabled', false)
-      $('i.fa-spinner.fa-pulse').css({ display: 'none' })
+      $('.block-spinner').css({ display: 'none' })
       status('Deploy')
       this._handleUserError(err)
     })
