@@ -1,0 +1,122 @@
+$icons-font: "icons";
+
+@mixin icon($icon-name: null) {
+    font-family: icons !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+  @if ($icon-name) {
+    $icon: map-get($icons-map, $icon-name);
+    @if ($icon) {
+      content: $icon;
+    } @else {
+      @error "Icon \"#{$icon-name}\" does not exist";
+    }
+  }
+}
+
+@mixin icon-before {
+  &::before {
+    @include icon;
+  }
+}
+@mixin icon-after {
+  &::after {
+    @include icon;
+  }
+}
+
+
+$icons-map: (
+    "browser": "\f101",
+    "facebook": "\f102",
+    "git": "\f103",
+    "info-circle": "\f104",
+    "terminal": "\f105",
+    "twitter": "\f106",
+    "user-headset": "\f107",
+    "warn": "\f108",
+    "wrench": "\f109",
+    "youtube": "\f10a",
+);
+
+@mixin icons {
+
+@font-face {
+    font-family: $icons-font;
+    src: url("./icons.ttf?fba1304e5e45beb6dde7562e21c1705d") format("truetype"),
+url("./icons.woff2?fba1304e5e45beb6dde7562e21c1705d") format("woff2"),
+url("./icons.svg?fba1304e5e45beb6dde7562e21c1705d#icons") format("svg");
+}
+
+.icon, [class^="icon-"], [class*=" icon-"] {
+  @include icon-before;
+}
+
+    .icon.icon-browser::before {
+        content: map-get($icons-map, "browser");
+    }
+    .icon.icon-facebook::before {
+        content: map-get($icons-map, "facebook");
+    }
+    .icon.icon-git::before {
+        content: map-get($icons-map, "git");
+    }
+    .icon.icon-info-circle::before {
+        content: map-get($icons-map, "info-circle");
+    }
+    .icon.icon-terminal::before {
+        content: map-get($icons-map, "terminal");
+    }
+    .icon.icon-twitter::before {
+        content: map-get($icons-map, "twitter");
+    }
+    .icon.icon-user-headset::before {
+        content: map-get($icons-map, "user-headset");
+    }
+    .icon.icon-warn::before {
+        content: map-get($icons-map, "warn");
+    }
+    .icon.icon-wrench::before {
+        content: map-get($icons-map, "wrench");
+    }
+    .icon.icon-youtube::before {
+        content: map-get($icons-map, "youtube");
+    }
+}
+
+@mixin icon-browser {
+    content: map-get($icons-map, "browser");
+}
+@mixin icon-facebook {
+    content: map-get($icons-map, "facebook");
+}
+@mixin icon-git {
+    content: map-get($icons-map, "git");
+}
+@mixin icon-info-circle {
+    content: map-get($icons-map, "info-circle");
+}
+@mixin icon-terminal {
+    content: map-get($icons-map, "terminal");
+}
+@mixin icon-twitter {
+    content: map-get($icons-map, "twitter");
+}
+@mixin icon-user-headset {
+    content: map-get($icons-map, "user-headset");
+}
+@mixin icon-warn {
+    content: map-get($icons-map, "warn");
+}
+@mixin icon-wrench {
+    content: map-get($icons-map, "wrench");
+}
+@mixin icon-youtube {
+    content: map-get($icons-map, "youtube");
+}

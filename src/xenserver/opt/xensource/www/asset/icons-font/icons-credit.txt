@@ -1,0 +1,17 @@
+Icon font for Vates, XCP-ng and Xen Orchestra projects
+
+All icons made self, are under GNU GENERAL PUBLIC LICENSE
+Except some icons
+
+Here the list of all icons and their source:
+
+browser : self made
+facebook : self made
+git : https://git-scm.com/downloads/logos
+info-circle : self made
+terminal : self made
+twitter : https://about.twitter.com/en/who-we-are/brand-toolkit
+user-headset : self made
+warn : self made
+wrench : self made
+youtube : https://www.youtube.com/howyoutubeworks/resources/brand-resources/#logos-icons-and-colors

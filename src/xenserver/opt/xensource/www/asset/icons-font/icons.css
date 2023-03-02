@@ -1,0 +1,54 @@
+@font-face {
+  font-family: "icons";
+  src: url("./icons.ttf?fba1304e5e45beb6dde7562e21c1705d") format("truetype"), url("./icons.woff2?fba1304e5e45beb6dde7562e21c1705d") format("woff2"), url("./icons.svg?fba1304e5e45beb6dde7562e21c1705d#icons") format("svg");
+}
+.icon::before, [class^=icon-]::before, [class*=" icon-"]::before {
+  font-family: icons !important;
+  font-style: normal;
+  font-weight: normal !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon.icon-browser::before {
+  content: "\f101";
+}
+
+.icon.icon-facebook::before {
+  content: "\f102";
+}
+
+.icon.icon-git::before {
+  content: "\f103";
+}
+
+.icon.icon-info-circle::before {
+  content: "\f104";
+}
+
+.icon.icon-terminal::before {
+  content: "\f105";
+}
+
+.icon.icon-twitter::before {
+  content: "\f106";
+}
+
+.icon.icon-user-headset::before {
+  content: "\f107";
+}
+
+.icon.icon-warn::before {
+  content: "\f108";
+}
+
+.icon.icon-wrench::before {
+  content: "\f109";
+}
+
+.icon.icon-youtube::before {
+  content: "\f10a";
+}
