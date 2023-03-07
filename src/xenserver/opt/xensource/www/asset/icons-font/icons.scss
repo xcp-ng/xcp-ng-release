@@ -1,0 +1,101 @@
+$icons-font: "icons";
+
+@mixin icon($icon-name: null) {
+    font-family: icons !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+  @if ($icon-name) {
+    $icon: map-get($icons-map, $icon-name);
+    @if ($icon) {
+      content: $icon;
+    } @else {
+      @error "Icon \"#{$icon-name}\" does not exist";
+    }
+  }
+}
+
+@mixin icon-before {
+  &::before {
+    @include icon;
+  }
+}
+@mixin icon-after {
+  &::after {
+    @include icon;
+  }
+}
+
+
+$icons-map: (
+    "browser": "\f101",
+    "git": "\f102",
+    "info-circle": "\f103",
+    "terminal": "\f104",
+    "user-headset": "\f105",
+    "warn": "\f106",
+    "wrench": "\f107",
+);
+
+@mixin icons {
+
+@font-face {
+    font-family: $icons-font;
+    src: url("./icons.ttf?eb23ed4d6aabbca400c219ac5a097fb5") format("truetype"),
+url("./icons.woff2?eb23ed4d6aabbca400c219ac5a097fb5") format("woff2"),
+url("./icons.svg?eb23ed4d6aabbca400c219ac5a097fb5#icons") format("svg");
+}
+
+.icon, [class^="icon-"], [class*=" icon-"] {
+  @include icon-before;
+}
+
+    .icon.icon-browser::before {
+        content: map-get($icons-map, "browser");
+    }
+    .icon.icon-git::before {
+        content: map-get($icons-map, "git");
+    }
+    .icon.icon-info-circle::before {
+        content: map-get($icons-map, "info-circle");
+    }
+    .icon.icon-terminal::before {
+        content: map-get($icons-map, "terminal");
+    }
+    .icon.icon-user-headset::before {
+        content: map-get($icons-map, "user-headset");
+    }
+    .icon.icon-warn::before {
+        content: map-get($icons-map, "warn");
+    }
+    .icon.icon-wrench::before {
+        content: map-get($icons-map, "wrench");
+    }
+}
+
+@mixin icon-browser {
+    content: map-get($icons-map, "browser");
+}
+@mixin icon-git {
+    content: map-get($icons-map, "git");
+}
+@mixin icon-info-circle {
+    content: map-get($icons-map, "info-circle");
+}
+@mixin icon-terminal {
+    content: map-get($icons-map, "terminal");
+}
+@mixin icon-user-headset {
+    content: map-get($icons-map, "user-headset");
+}
+@mixin icon-warn {
+    content: map-get($icons-map, "warn");
+}
+@mixin icon-wrench {
+    content: map-get($icons-map, "wrench");
+}
