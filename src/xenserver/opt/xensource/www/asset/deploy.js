@@ -8,8 +8,8 @@ function _handleUserError(error) {
 }
 
 function setStep(previousStep, nextStep) {
-  $(`#${previousStep}`).css({ display: "none" });
-  $(`#${nextStep}`).css({ display: "block" });
+  document.querySelector(`#${previousStep}`).style.display = "none";
+  document.querySelector(`#${nextStep}`).style.display = "block";
 }
 
 function _jsonRpcCall(url, method, params) {
@@ -54,67 +54,71 @@ function _call(method, params) {
 }
 
 function connect() {
-  $("#connect fieldset").attr("disabled", true);
-  _call("session.login_with_password", ["root", $("#pwd").val(), "2.3", "XOA deploy"])
+  document.querySelector("#connect fieldset").setAttribute("disabled", true);
+  _call("session.login_with_password", ["root", document.querySelector("#pwd").value, "2.3", "XOA deploy"])
     .then((sessionRef) => {
       call = (method, ...params) => _call(method, [sessionRef].concat(params));
     })
     .then(() => Promise.all([call("SR.get_all_records"), call("pool.get_all_records"), call("network.get_all_records"), call("PIF.get_all_records")]))
     .then(([srs, pools, networks, pifs]) => {
       setStep("connect", "config");
-      const selectSr = $("#srs");
+      const selectSr = document.querySelector("#srs");
       let sr;
+
       Object.keys(srs).forEach((srRef) => {
         sr = srs[srRef];
         if (sr.content_type !== "iso" && sr.physical_size > 0) {
-          selectSr.append(
-            $("<option/>")
-              .val(srRef)
-              .text(`${sr.name_label} - ${Math.round((sr.physical_size - sr.physical_utilisation) / Math.pow(1024, 3))} GiB left`)
-          );
+          let option = document.createElement("option");
+          option.value = srRef;
+          option.textContent = `${sr.name_label} - ${Math.round((sr.physical_size - sr.physical_utilisation) / Math.pow(1024, 3))} GiB left`;
+          selectSr.append(option);
         }
       });
       const { default_SR } = pools[Object.keys(pools)[0]];
+
       if (default_SR !== undefined) {
-        selectSr.val(default_SR);
+        selectSr.value = default_SR;
       }
-      const selectNetwork = $("#networks");
-      let network;
+      const selectNetwork = document.querySelector("#networks");
       Object.keys(networks).forEach((networkRef) => {
-        network = networks[networkRef];
-        selectNetwork.append($("<option/>").val(networkRef).data("mtu", network.MTU).text(network.name_label));
+        let network = networks[networkRef];
+        const option = document.createElement("option");
+        option.value = networkRef;
+        option.dataset.mtu = network.MTU;
+        option.textContent = network.name_label;
+        selectNetwork.append(option);
       });
       const managementPif = Object.values(pifs).find((pif) => pif.management);
       if (managementPif && managementPif.network !== undefined) {
-        selectNetwork.val(managementPif.network);
+        selectNetwork.value = managementPif.network;
       }
     })
     .catch((err) => {
-      $("#connect fieldset").attr("disabled", false);
+      document.querySelector("#connect fieldset").removeAttribute("disabled");
       this._handleUserError(err);
     });
 }
 
 function submitConfig() {
-  const ipError = $("#ip-error");
-  ipError.hide();
-  const ip = $("#ip").val();
+  const ipError = document.querySelector("#ip-error");
+  ipError.style.display = "none";
+  const ip = document.querySelector("#ip").value;
   if (ip === window.location.hostname) {
-    ipError.show();
+    ipError.style.display = "block";
     return;
   }
   setStep("config", "accounts");
 }
 
 function deploy() {
-  const status = (text) => $("#deploy").text(text);
-  $("i.fa-spinner.fa-pulse").css({ display: "inherit" });
-  const srRef = $("#srs").val();
+  const status = (text) => (document.querySelector("#deploy").innerText = text);
+  document.querySelector(".spinner").style.display = "inherit";
+  const srRef = document.querySelector("#srs").value;
   status("Deploying XOA…");
-  $("#accounts fieldset").attr("disabled", true);
+  document.querySelector("#accounts fieldset").setAttribute("disabled", true);
   let registrationToken;
-  const updaterEmail = $("#updaterEmail").val();
-  const updaterPwd = $("#updaterPwd").val();
+  const updaterEmail = document.querySelector("#updaterEmail").value;
+  const updaterPwd = document.querySelector("#updaterPwd").value;
   Promise.resolve()
     .then(() => {
       if (updaterEmail && updaterPwd) {
@@ -139,24 +143,24 @@ function deploy() {
       vmRef = _vmRef;
       status("Configuring XOA…");
       const promises = [];
-      const ip = $("#ip").val();
+      const ip = document.querySelector("#ip").value;
       if (ip) {
         promises.push(
           call("VM.add_to_xenstore_data", vmRef, "vm-data/ip", ip),
-          call("VM.add_to_xenstore_data", vmRef, "vm-data/netmask", $("#netmask").val() || "255.255.255.0"),
-          call("VM.add_to_xenstore_data", vmRef, "vm-data/gateway", $("#gateway").val() || ""),
-          call("VM.add_to_xenstore_data", vmRef, "vm-data/dns", $("#dns").val() || "8.8.8.8")
+          call("VM.add_to_xenstore_data", vmRef, "vm-data/netmask", document.querySelector("#netmask")?.value || "255.255.255.0"),
+          call("VM.add_to_xenstore_data", vmRef, "vm-data/gateway", document.querySelector("#gateway")?.value || ""),
+          call("VM.add_to_xenstore_data", vmRef, "vm-data/dns", document.querySelector("#dns").value || "8.8.8.8")
         );
       }
-      const email = $("#adminEmail").val();
-      const password = $("#adminPwd").val();
+      const email = document.querySelector("#adminEmail").value;
+      const password = document.querySelector("#adminPwd").value;
       if (email && password) {
         promises.push(call("VM.add_to_xenstore_data", vmRef, "vm-data/admin-account", JSON.stringify({ email, password })));
       }
       if (registrationToken) {
         promises.push(call("VM.add_to_xenstore_data", vmRef, "vm-data/xoa-updater-credentials", JSON.stringify({ email: updaterEmail, registrationToken })));
       }
-      const xoaPwd = $("#xoaPwd").val();
+      const xoaPwd = document.querySelector("#xoaPwd").value;
       if (xoaPwd) {
         promises.push(call("VM.add_to_xenstore_data", vmRef, "vm-data/system-account-xoa-password", xoaPwd));
       }
@@ -169,15 +173,15 @@ function deploy() {
             {
               allowUnauthorized: true,
               host,
-              password: $("#pwd").val(),
+              password: document.querySelector("#pwd").value,
               username: "root",
             },
           ])
         )
       );
 
-      const network = $("#networks").val();
-      const MTU = $("#networks").find(":selected").data("mtu");
+      const network = document.querySelector("#networks").value;
+      const MTU = document.querySelector("#networks option:checked").dataset.mtu;
       promises.push(
         call("VM.get_VIFs", vmRef)
           .then(([vifRef]) => call("VIF.destroy", vifRef))
@@ -237,13 +241,50 @@ function deploy() {
     .then(() => {
       status("XOA is ready! Redirecting…");
       setTimeout(() => {
-        window.location = `https://${$("#ip").val() || vmIp}`;
+        window.location = `https://${document.querySelector("#ip").value || vmIp}`;
       }, 3e3);
     })
     .catch((err) => {
-      $("#accounts fieldset").attr("disabled", false);
-      $("i.fa-spinner.fa-pulse").css({ display: "none" });
+      document.querySelector("#accounts fieldset").removeAttribute("disabled");
+      document.querySelector(".spinner").style.display = "none";
       status("Deploy");
       this._handleUserError(err);
     });
 }
+
+// Replacement for jquery modal
+
+window.addEventListener("DOMContentLoaded", () => {
+  [...document.querySelectorAll("[rel='modal:open']")].forEach((modalTrigger) => {
+    modalTrigger.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      document.documentElement.style.overflow = "hidden";
+      const modal = document.querySelector(modalTrigger.getAttribute("href"));
+      const modalContainer = document.createElement("div");
+      modalContainer.className = "modal-container blocker current";
+      modalContainer.append(modal);
+      modal.style.display = "block";
+      document.body.append(modalContainer);
+      // close button
+      const closeButton = document.createElement("a");
+      closeButton.setAttribute("href", "#close-modal");
+      closeButton.setAttribute("rel", "modal:close");
+      closeButton.setAttribute("class", "close-modal");
+      closeButton.title = "Close modal";
+      modal.append(closeButton);
+
+      const close = (e) => {
+        e.preventDefault();
+        modal.style.display = "none";
+        document.body.appendChild(modal);
+        modalContainer.remove();
+        closeButton.remove();
+        document.documentElement.style.overflow = "";
+      };
+      [...modalContainer.querySelectorAll("[rel='modal:close']")].forEach((button) => {
+        button.addEventListener("click", close);
+      });
+    });
+  });
+});

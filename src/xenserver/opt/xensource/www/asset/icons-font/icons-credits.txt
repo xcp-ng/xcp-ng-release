@@ -1,0 +1,11 @@
+All icons are under CC-BY-SA license
+
+Here the list of all icons and their source:
+
+browser: CC-BY-SA
+git: https://git-scm.com/downloads/logos
+info-circle: CC-BY-SA
+terminal: CC-BY-SA
+user-headset: CC-BY-SA
+warn: CC-BY-SA
+wrench: CC-BY-SA
