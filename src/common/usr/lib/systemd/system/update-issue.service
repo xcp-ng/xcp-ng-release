@@ -1,0 +1,10 @@
+[Unit]
+Description=Update logon message
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/sbin/update-issue
+
+[Install]
+WantedBy=multi-user.target

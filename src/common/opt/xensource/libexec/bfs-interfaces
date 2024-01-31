@@ -1,0 +1,45 @@
+#!/bin/bash
+
+for dir in /sys/firmware/ibft/ethernet{0,1} ; do
+        [ ! -e $dir/mac ] && continue || \
+            ibft_mac=$(cat $dir/mac)
+        ibft_eth=$(ls $dir/device/net)
+        if [ $? -ne 0 ]; then
+            >&2 echo "Unable to find network interface for iSCSI iBFT mac $ibft_mac"
+            continue
+        fi
+        ibft_eths="$ibft_eths $ibft_eth"
+    done
+echo $ibft_eths
+
+cmdline=$(cat /proc/cmdline)
+
+set -- $cmdline
+
+while [ -n "$1" ] ;
+do
+    case "$1" in
+    fcoe=*)
+        if [[ $1 == *"eth"* ]] ;
+        then
+            eth="${1#*=}"
+            eth="${eth%:*}"
+            list="$list $eth"
+        else
+            mac=${1:5:17}
+            for dir in /sys/class/net/eth* ;
+            do
+                [[ $dir == *"."* ]] && continue
+                addr=$(cat $dir/address)
+                if [[ $mac == $addr ]] ;
+                then
+                    basename=$(basename $dir)
+                    list="$list $basename"
+                    break
+                fi
+            done
+        fi
+    esac
+    shift
+done
+echo $list

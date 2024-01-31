@@ -1,0 +1,1 @@
+SUBSYSTEM=="bsg" NAME="bsg/%k"

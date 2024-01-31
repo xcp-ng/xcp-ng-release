@@ -1,0 +1,4 @@
+[Unit]
+Description=System Logging
+Requires=rsyslog.service
+After=rsyslog.service

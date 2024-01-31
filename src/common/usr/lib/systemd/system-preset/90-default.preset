@@ -1,0 +1,3 @@
+# This file is empty on purpose
+# It is kept so that this package conflicts with centos-release
+# The actual rules got moved to 89-default.preset
