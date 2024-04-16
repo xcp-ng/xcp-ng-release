@@ -10,8 +10,8 @@ unset BANNER
 unset HOSTTYPE
 
 if [ ! -z "${PRODUCT_VERSION_TEXT}" ]; then
-    BANNER="${COMPANY_PRODUCT_BRAND} Host ${PRODUCT_VERSION_TEXT}"
-    HOSTTYPE="${PRODUCT_BRAND} Host"
+    BANNER="${COMPANY_PRODUCT_BRAND} ${PRODUCT_VERSION_TEXT}"
+    HOSTTYPE="${PRODUCT_BRAND} host"
     if [ -n "${BRAND_CONSOLE_URL}" ]; then
         MANAGE="To manage this server please use Xen Orchestra.
 You can install Xen Orchestra from https://xen-orchestra.com."
@@ -37,6 +37,8 @@ unset FINGERPRINT
 if [ -f /etc/xensource/xapi-ssl.pem ] ; then
     FINGERPRINT=`openssl x509 -in /etc/xensource/xapi-ssl.pem -fingerprint -noout`
     FINGERPRINT=${FINGERPRINT#SHA1 Fingerprint=}
+    FINGERPRINT_SHA2=`openssl x509 -in /etc/xensource/xapi-ssl.pem -fingerprint -noout -sha256`
+    FINGERPRINT_SHA2=${FINGERPRINT_SHA2#SHA256 Fingerprint=}
 fi
 cat > $mnt/etc/issue <<EOF
 ${BANNER}
@@ -55,8 +57,11 @@ EOF
 
 if [ -n "${FINGERPRINT}" ] ; then
     cat >> $mnt/etc/issue <<EOF
-${HOSTTYPE} SSL certificate fingerprint:
+${HOSTTYPE} TLS certificate SHA1 fingerprint:
 $FINGERPRINT
+
+${HOSTTYPE} TLS certificate SHA256 fingerprint:
+$FINGERPRINT_SHA2
 
 EOF
 fi
