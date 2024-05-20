@@ -174,3 +174,5 @@ enable network-init.service
 
 enable xs-telemetry.service
 enable xs-telemetry.timer
+
+enable iscsi-bfs-dhcp.service

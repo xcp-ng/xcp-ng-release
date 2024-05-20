@@ -1,0 +1,19 @@
+#!/bin/bash
+
+for dir in /sys/firmware/ibft/ethernet{0,1} ; do
+    [ ! -e $dir/dhcp ] && continue
+    [ ! -e $dir/mac ] && continue || \
+        ibft_mac=$(cat $dir/mac)
+    ibft_eth=$(ls $dir/device/net)
+    if [ $? -ne 0 ]; then
+        >&2 echo "Unable to find network interface for iSCSI iBFT mac $ibft_mac"
+        continue
+    fi
+
+    echo """interface \"$ibft_eth\" {
+  send host-name = gethostname();
+  request subnet-mask, broadcast-address, interface-mtu;
+}""" > /var/lib/xcp/dhclient-${ibft_eth}.conf
+
+    /sbin/dhclient -e PEERNTP=no -q -pf /var/run/dhclient-${ibft_eth}.pid -lf /var/lib/xcp/dhclient-${ibft_eth}.leases -cf /var/lib/xcp/dhclient-${ibft_eth}.conf $ibft_eth
+done
