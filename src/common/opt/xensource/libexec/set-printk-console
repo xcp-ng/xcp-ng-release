@@ -1,6 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
-import fcntl, termios, os, array, sys
+import array
+import fcntl
+import os
+import sys
+import termios
 
 TIOCL_SETKMSGREDIRECT = 11
 
@@ -10,17 +14,17 @@ if len(sys.argv) != 2:
 
 try:
     vt_num = int(sys.argv[1])
-except Exception, e:
+except Exception as e:
     sys.stderr.write("Error: " + str(e) + "\n")
     sys.exit(1)
 
 try:
     fd = os.open("/dev/tty0", os.O_RDWR)
 
-    buf = array.array('B', [TIOCL_SETKMSGREDIRECT, vt_num])
-    fcntl.ioctl(fd, termios.TIOCLINUX, buf, 1)
+    buf = array.array("B", [TIOCL_SETKMSGREDIRECT, vt_num])
+    fcntl.ioctl(fd, termios.TIOCLINUX, buf, True)
 
     os.close(fd)
 
-except OSError, e:
+except OSError as e:
     sys.stderr.write("Error: " + str(e) + "\n")
