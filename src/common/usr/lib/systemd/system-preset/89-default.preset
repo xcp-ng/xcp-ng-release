@@ -171,3 +171,5 @@ enable upgrade-likewise-to-pbis.service
 enable generate-iscsi-iqn.service
 enable control-domain-params-init.service
 enable network-init.service
+
+enable iscsi-bfs-dhcp.service
