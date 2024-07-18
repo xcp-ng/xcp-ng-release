@@ -8,7 +8,6 @@
   <meta charset="utf-8">
   <title>Welcome to XCP-ng @PRODUCT_VERSION@</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="asset/deploy.js"></script>
   <link rel="stylesheet" href="asset/flexboxgrid.min.css" type="text/css" />
   <link rel="stylesheet" href="asset/icons-font/icons.css" />
   <link rel="icon" type="image/png" href="asset/favicon.png" />
@@ -37,7 +36,7 @@
         <div class="col-md">
           <div class="box">
             <h4>Xen Orchestra</h4>
-            <a href="#ex1" rel="modal:open"><img class="preview" src="./asset/xoa.jpg" alt="Xen Orchestra" /></a>
+            <a href="https://vates.tech/deploy"><img class="preview" src="./asset/xoa.jpg" alt="Xen Orchestra" /></a>
             <p class="options">
               <span class="tooltip">
                 <a href="https://xen-orchestra.com/#!/xo-features/webinterface?pk_campaign=xcp-ng-html"
@@ -65,7 +64,7 @@
               directly from your web browser.
             </p>
             <p>
-              <a href="#ex1" class="btn" rel="modal:open">Quick deploy</a>
+              <a href="https://vates.tech/deploy" class="btn">Quick deploy</a>
             </p>
           </div>
         </div>
@@ -149,131 +148,6 @@
       <p>
         <a href="https://xcp-ng.org/forum" class="btn">Community forum</a>
       </p>
-    </div>
-    <!-- Modalcontent -->
-    <div id="ex1" class="modal">
-      <h3 class="subtitle">Xen Orchestra quick deploy</h3>
-      <p style="font-size: small;">This will download and deploy a new virtual machine on your host, called "XOA" (Xen
-        Orchestra virtual Appliance).</p>
-      <form id="connect" onsubmit="event.preventDefault(); connect()">
-        <fieldset>
-          <p>
-            <label>
-              Host username<br />
-              <input type="text" disabled value="root" />
-            </label>
-          </p>
-          <p>
-            <label>
-              Host password<br />
-              <input type="password" id="pwd" />
-            </label>
-          </p>
-          <p>
-            <em><i class="fas fa-info-circle"></i> This host's root
-              credentials</em>
-          </p>
-          <p><button class="btn" type="submit">Connect</button></p>
-        </fieldset>
-      </form>
-      <form id="config" onsubmit="event.preventDefault(); submitConfig()" style="display: none">
-        <fieldset>
-          <p>
-            <label>
-              Select a storage<br />
-              <select id="srs"></select>
-            </label>
-          </p>
-          <p>
-            <label>
-              Select a network<br />
-              <select id="networks"></select>
-            </label>
-          </p>
-          <p id="ip-error" style="display: none">
-            <em class="danger"><i class="fas fa-exclamation-triangle"></i>
-              <span>You entered the same IP address as your host. Please choose a
-                different one for your XOA:</span></em>
-          </p>
-          <p>
-            <label>
-              XOA VM IP address<br />
-              <input type="text" id="ip" />
-            </label>
-          </p>
-          <p>
-            <label>
-              Netmask<br />
-              <input type="text" placeholder="255.255.255.0" id="netmask" />
-            </label>
-          </p>
-          <p>
-            <label>
-              Gateway<br />
-              <input type="text" id="gateway" />
-            </label>
-          </p>
-          <p>
-            <label>
-              DNS<br />
-              <input type="text" placeholder="8.8.8.8" id="dns" />
-            </label>
-          </p>
-          <p>
-            <em><i class="fas fa-info-circle"></i> Leave everything empty to
-              use DHCP. Provide all the information otherwise.</em>
-          </p>
-          <p><button class="btn" type="submit">Next</button></p>
-        </fieldset>
-      </form>
-      <form id="accounts" onsubmit="event.preventDefault(); deploy()" style="display: none">
-        <fieldset>
-          <h4>Create an Admin account on your XOA</h4>
-          <p>
-            <label>
-              Username<br />
-              <input type="text" placeholder="admin@admin.net" id="adminEmail" /> </label><br />
-            <label>
-              Password<br />
-              <input type="password" placeholder="admin" id="adminPwd" />
-            </label>
-          </p>
-          <h4>Register your XOA</h4>
-          <p>
-            <a href="https://xen-orchestra.com/#!/signup" target="_blank">Create an account</a>
-          </p>
-          <p>
-            <label>
-              xen-orchestra.com username<br />
-              <input type="text" id="updaterEmail" /> </label><br />
-            <label>
-              xen-orchestra.com password<br />
-              <input type="password" id="updaterPwd" />
-            </label>
-          </p>
-          <h4>Set the XOA machine password</h4>
-          <p>
-            <label>
-              Login<br />
-              <input type="text" disabled value="xoa" /> </label><br />
-            <label>
-              Password<br />
-              <input type="password" placeholder="Account disabled if empty" id="xoaPwd" />
-            </label>
-          </p>
-          <p>
-            <em><i class="fas fa-info-circle"></i> You can do this later</em>
-          </p>
-          <p>
-            <button class="btn" type="submit">
-              <i class="spinner" style="display: none;"></i>
-              <span id="deploy">Deploy</span>
-            </button>
-          </p>
-        </fieldset>
-      </form>
-      <br />
-      <a href="#" rel="modal:close">Close</a>
     </div>
   </div>
 </body>
