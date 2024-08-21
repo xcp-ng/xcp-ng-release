@@ -1,0 +1,39 @@
+# CentOS-Base.repo
+#
+# ***     XCP-ng warning    ***
+# Do NOT enable the repositories below.
+# If you really need to install something from those, you can do it with the
+# --enablerepo parameter to the yum command. At your own risks.
+#
+# Example:     yum install somepackage --enablerepo=base
+# Another one: yum install somepackage --enablerepo=base,updates
+#
+# See https://docs.xcp-ng.org/management/additional-packages/
+#
+# *** end of XCP-ng warning ***
+
+[base]
+name=CentOS-$releasever - Base (EOL)
+baseurl=https://repo.vates.tech/centos/$releasever/os/$basearch/
+enabled=0
+exclude=kernel kernel-abi-whitelists kernel-debug kernel-debug-devel kernel-devel kernel-doc kernel-tools kernel-tools-libs kernel-tools-libs-devel linux-firmware biosdevname centos-release systemd* stunnel kexec-tools ocaml*
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+#released updates 
+[updates]
+name=CentOS-$releasever - Updates (EOL)
+baseurl=https://repo.vates.tech/centos/$releasever/updates/$basearch/
+enabled=0
+exclude=kernel kernel-abi-whitelists kernel-debug kernel-debug-devel kernel-devel kernel-doc kernel-tools kernel-tools-libs kernel-tools-libs-devel linux-firmware biosdevname centos-release systemd* stunnel kexec-tools ocaml*
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+#additional packages that may be useful
+[extras]
+name=CentOS-$releasever - Extras (EOL)
+baseurl=https://repo.vates.tech/centos/$releasever/extras/$basearch/
+enabled=0
+exclude=ocaml*
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
