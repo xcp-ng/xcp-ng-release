@@ -1,0 +1,10 @@
+[Unit]
+Description=DHCP client on iSCSI BFS interfaces
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/xensource/libexec/iscsi-bfs-dhcp
+
+[Install]
+WantedBy=multi-user.target
