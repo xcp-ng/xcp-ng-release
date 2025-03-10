@@ -161,6 +161,9 @@ enable save-boot-info.service
 enable xcp-rrdd-iostat.service
 enable xcp-rrdd-squeezed.service
 enable xcp-rrdd-xenpm.service
+enable xcp-rrdd-dcmi.service
+enable xcp-rrdd-cpu.service
+enable xcp-rrdd-netdev.service
 enable xapi-nbd.path
 enable varstored-guard.service
 enable secureboot-certificates.service
